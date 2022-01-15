@@ -11,7 +11,7 @@ static bool WAITING_FOR_PACKET = false;
 
 void hostServer(sf::TcpSocket& socket)
 {
-    std::cout << "Waiting for connection on " << sf::IpAddress::getLocalAddress() << ":" << PORT << "..." << std::endl;
+    std::cout << "Waiting for connection..." << std::endl;
     
     sf::TcpListener listener;
     listener.listen(PORT);
@@ -80,7 +80,6 @@ void receiveMove(sf::TcpSocket& socket, TicTacToeMove& move)
         PACKET_RECEIVED = true;
         WAITING_FOR_PACKET = false;
     };
-    
     
     /* Spawn detached thread to receive packet */
     std::thread thread(f);
@@ -168,10 +167,16 @@ int main()
         }
         else
         {
-            if(PACKET_RECEIVED)
+            if(!WAITING_FOR_PACKET)
+            {
+                WAITING_FOR_PACKET = true;
+                receiveMove(socket, PACKET_DATA);
+            }
+            else if(PACKET_RECEIVED)
             {
                 PACKET_RECEIVED = false;
                 myTurn = true;
+                
                 ttt.setMark(PACKET_DATA.row, PACKET_DATA.col);
                 
                 std::optional<bool> winner = ttt.checkWin();
@@ -191,11 +196,6 @@ int main()
                 {
                     std::cout << "No winner" << std::endl;
                 }
-            }
-            else if(!WAITING_FOR_PACKET)
-            {
-                WAITING_FOR_PACKET = true;
-                receiveMove(socket, PACKET_DATA);
             }
         }
         
