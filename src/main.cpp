@@ -173,6 +173,24 @@ int main()
                 PACKET_RECEIVED = false;
                 myTurn = true;
                 ttt.setMark(PACKET_DATA.row, PACKET_DATA.col);
+                
+                std::optional<bool> winner = ttt.checkWin();
+                
+                if(winner.has_value())
+                {
+                    if(winner.value())
+                    {
+                        std::cout << "X" << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "O" << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "No winner" << std::endl;
+                }
             }
             else if(!WAITING_FOR_PACKET)
             {
