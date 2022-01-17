@@ -43,7 +43,7 @@ void joinServer(sf::TcpSocket& socket)
     std::cout << "Connected" << std::endl;
 }
 
-bool getSocket(sf::TcpSocket& socket)
+bool setupSocket(sf::TcpSocket& socket)
 {
     std::string answer;
     do
@@ -89,7 +89,7 @@ void receiveMove(sf::TcpSocket& socket, TicTacToeMove& move)
 int main()
 {
     sf::TcpSocket socket;
-    bool isHost = getSocket(socket);
+    bool isHost = setupSocket(socket);
     
     sf::VideoMode windowVideoMode(600, 600);
     sf::RenderWindow window(windowVideoMode, "TicTacToe", sf::Style::Close);
