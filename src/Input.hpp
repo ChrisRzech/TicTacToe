@@ -1,3 +1,4 @@
+#pragma once
 #include <sfml/Window.hpp>
 #include <vector>
 
