@@ -62,8 +62,7 @@ int main()
 {
     isHost = setupSocket(socket);
     
-    sf::VideoMode windowVideoMode(600, 600);
-    sf::RenderWindow window(windowVideoMode, "TicTacToe", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
     window.setFramerateLimit(60);
     
     const std::vector<Input::Key> polledInputs =
