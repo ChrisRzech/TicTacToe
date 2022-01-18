@@ -1,13 +1,10 @@
-#include "TicTacToeDrawer.hpp"
 #include "Input.hpp"
-#include "Packets.hpp"
-#include <thread>
+#include "GameScene.hpp"
 #include <iostream>
 
 static unsigned short PORT = 50'000;
-static bool PACKET_RECEIVED = false;
-static TicTacToeMove PACKET_DATA;
-static bool WAITING_FOR_PACKET = false;
+sf::TcpSocket socket;
+bool isHost = false;
 
 void hostServer(sf::TcpSocket& socket)
 {
@@ -61,35 +58,9 @@ bool setupSocket(sf::TcpSocket& socket)
     return answer == "y";
 }
 
-void sendMove(sf::TcpSocket& socket, const TicTacToeMove& move)
-{
-    sf::Packet packet;
-    packet << move;
-    socket.send(packet);
-}
-
-void receiveMove(sf::TcpSocket& socket, TicTacToeMove& move)
-{
-    auto f =
-    [&socket]
-    ()
-    {
-        sf::Packet packet;
-        socket.receive(packet);
-        packet >> PACKET_DATA;
-        PACKET_RECEIVED = true;
-        WAITING_FOR_PACKET = false;
-    };
-    
-    /* Spawn detached thread to receive packet */
-    std::thread thread(f);
-    thread.detach();
-}
-
 int main()
 {
-    sf::TcpSocket socket;
-    bool isHost = setupSocket(socket);
+    isHost = setupSocket(socket);
     
     sf::VideoMode windowVideoMode(600, 600);
     sf::RenderWindow window(windowVideoMode, "TicTacToe", sf::Style::Close);
@@ -100,10 +71,8 @@ int main()
         Input::Key::LeftClick
     };
     Input input(window, 10, polledInputs);
-
-    TicTacToe ttt;
-    TicTacToeDrawer tttDrawer(ttt, sf::Vector2f{0, 0}, sf::Vector2u{600, 600});
-    bool myTurn = isHost;
+    
+    Scene* scene = new GameScene(window);
     
     while(window.isOpen())
     {
@@ -126,82 +95,10 @@ int main()
             }
         }
         
-        /* Input */
         if(window.hasFocus())
             input.poll();
         
-        /* Logic */
-        if(myTurn)
-        {
-            if(input.isPressed(Input::Key::LeftClick))
-            {
-                std::pair<int, int> cell = tttDrawer.convertPointToCell(static_cast<sf::Vector2f>(input.mousePosition()));
-                
-                if(!ttt.getMark(cell.first, cell.second).has_value())
-                {
-                    ttt.setMark(cell.first, cell.second);
-                    
-                    sendMove(socket, TicTacToeMove{cell.first, cell.second});
-                    
-                    myTurn = false;
-                    
-                    std::optional<bool> winner = ttt.checkWin();
-                    
-                    if(winner.has_value())
-                    {
-                        if(winner.value())
-                        {
-                            std::cout << "X" << std::endl;
-                        }
-                        else
-                        {
-                            std::cout << "O" << std::endl;
-                        }
-                    }
-                    else
-                    {
-                        std::cout << "No winner" << std::endl;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if(!WAITING_FOR_PACKET)
-            {
-                WAITING_FOR_PACKET = true;
-                receiveMove(socket, PACKET_DATA);
-            }
-            else if(PACKET_RECEIVED)
-            {
-                PACKET_RECEIVED = false;
-                myTurn = true;
-                
-                ttt.setMark(PACKET_DATA.row, PACKET_DATA.col);
-                
-                std::optional<bool> winner = ttt.checkWin();
-                
-                if(winner.has_value())
-                {
-                    if(winner.value())
-                    {
-                        std::cout << "X" << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "O" << std::endl;
-                    }
-                }
-                else
-                {
-                    std::cout << "No winner" << std::endl;
-                }
-            }
-        }
-        
-        /* Render */
-        window.clear();
-        window.draw(tttDrawer);
-        window.display();
+        scene->update(input);
+        scene->draw();
     }
 }
