@@ -65,9 +65,11 @@ void TicTacToeDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) co
                 /* Center text in cell */
                 float textWidth = text.getLocalBounds().width;
                 float textHeight = text.getLocalBounds().height;
+                float leftExtraSpace = text.getLocalBounds().left;
+                float topExtraSpace = text.getLocalBounds().top;
                 float offsetX = spacingX / 2 - textWidth / 2;
                 float offsetY = spacingY / 2 - textHeight / 2;
-                text.setPosition(spacingX * col + offsetX, spacingY * row + offsetY);
+                text.setPosition(spacingX * col + offsetX - leftExtraSpace, spacingY * row + offsetY - topExtraSpace);
                 
                 target.draw(text);
             }
