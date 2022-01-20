@@ -6,6 +6,7 @@ class Scene
 {
 public:
     Scene(sf::RenderWindow&);
+    virtual ~Scene() = default;
     
     virtual void update(const Input&) = 0;
     virtual void draw() const = 0;
