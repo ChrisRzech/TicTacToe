@@ -1,5 +1,9 @@
 #include "Input.hpp"
 #include "GameScene.hpp"
+#include "MainMenuScene.hpp"
+#include "HostMenuScene.hpp"
+#include "JoinMenuScene.hpp"
+#include "SceneManager.hpp"
 #include <iostream>
 
 static unsigned short PORT = 50'000;
@@ -60,7 +64,7 @@ bool setupSocket(sf::TcpSocket& socket)
 
 int main()
 {
-    isHost = setupSocket(socket);
+    //isHost = setupSocket(socket);
     
     sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
     window.setFramerateLimit(60);
@@ -71,7 +75,12 @@ int main()
     };
     Input input(window, 10, polledInputs);
     
-    Scene* scene = new GameScene(window);
+    SceneManager::addScene("MainMenu", new MainMenuScene(window));
+    SceneManager::addScene("HostMenu", new HostMenuScene(window));
+    SceneManager::addScene("JoinMenu", new JoinMenuScene(window));
+    SceneManager::addScene("Game", new GameScene(window));
+    
+    SceneManager::changeScene("MainMenu");
     
     while(window.isOpen())
     {
@@ -97,7 +106,7 @@ int main()
         if(window.hasFocus())
             input.poll();
         
-        scene->update(input);
-        scene->draw();
+        SceneManager::getScene()->update(input);
+        SceneManager::getScene()->draw();
     }
 }
