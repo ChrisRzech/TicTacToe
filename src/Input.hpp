@@ -1,5 +1,5 @@
 #pragma once
-#include <sfml/Window.hpp>
+#include <sfml/Window/Window.hpp>
 #include <vector>
 
 class Input

@@ -1,4 +1,6 @@
-#include "input.hpp"
+#include "Input.hpp"
+#include <sfml/Window/Keyboard.hpp>
+#include <sfml/Window/Mouse.hpp>
 
 Input::Input(const sf::Window& window, int holdThreshold, const std::vector<Key>& keysToPoll)
     : m_window{window}, m_keysToPoll{keysToPoll}

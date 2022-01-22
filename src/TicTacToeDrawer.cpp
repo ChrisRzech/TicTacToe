@@ -1,5 +1,7 @@
 #include "TicTacToeDrawer.hpp"
 #include "Resources.hpp"
+#include <sfml/Graphics/VertexArray.hpp>
+#include <sfml/Graphics/Text.hpp>
 
 TicTacToeDrawer::TicTacToeDrawer(const TicTacToe& TicTacToe)
     : TicTacToeDrawer{TicTacToe, sf::Vector2f{0, 0}, sf::Vector2u{0, 0}}

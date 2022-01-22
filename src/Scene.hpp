@@ -1,5 +1,5 @@
 #pragma once
-#include <sfml/Graphics.hpp>
+#include <sfml/Graphics/RenderWindow.hpp>
 #include "Input.hpp"
 
 class Scene

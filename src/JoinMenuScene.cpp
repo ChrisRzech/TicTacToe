@@ -1,7 +1,7 @@
 #include "JoinMenuScene.hpp"
 #include "Resources.hpp"
 #include "SceneManager.hpp"
-#include <sfml/Network.hpp>
+#include <sfml/Network/TcpSocket.hpp>
 
 extern sf::TcpSocket socket;
 extern bool isHost;

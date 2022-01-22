@@ -1,6 +1,7 @@
 #pragma once
 #include "TicTacToe.hpp"
-#include <SFML/Graphics.hpp>
+#include <sfml/Graphics/RenderTarget.hpp>
+#include <sfml/Graphics/Drawable.hpp>
 
 class TicTacToeDrawer : public sf::Drawable
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include <sfml/Network.hpp>
+#include <sfml/Network/Packet.hpp>
 
 struct TicTacToeMove
 {

@@ -1,4 +1,5 @@
 #include "GameScene.hpp"
+#include <sfml/Network/TcpSocket.hpp>
 #include <thread>
 #include <iostream>
 

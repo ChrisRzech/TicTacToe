@@ -1,6 +1,8 @@
 #pragma once
 #include "Input.hpp"
-#include <sfml/Graphics.hpp>
+#include <sfml/Graphics/Text.hpp>
+#include <sfml/Graphics/RectangleShape.hpp>
+#include <sfml/Graphics/RenderTarget.hpp>
 
 class Button : public sf::Drawable
 {
