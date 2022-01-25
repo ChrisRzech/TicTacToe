@@ -74,7 +74,22 @@ int main()
     
     const std::vector<Input::Key> polledInputs =
     {
-        Input::Key::LeftClick
+        Input::Key::LeftClick,
+        
+        Input::Key::Num0,
+        Input::Key::Num1,
+        Input::Key::Num2,
+        Input::Key::Num3,
+        Input::Key::Num4,
+        Input::Key::Num5,
+        Input::Key::Num6,
+        Input::Key::Num7,
+        Input::Key::Num8,
+        Input::Key::Num9,
+        Input::Key::Period,
+        Input::Key::Backspace,
+        Input::Key::Left,
+        Input::Key::Right
     };
     Input input(window, 10, polledInputs);
     
