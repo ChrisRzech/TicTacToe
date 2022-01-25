@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "TextField.hpp"
 
 class JoinMenuScene : public Scene
 {
@@ -13,9 +14,9 @@ public:
 private:
     void joinServer();
     
-    std::string m_addressString;
-    sf::Text m_addressText;
-    sf::RectangleShape m_addressBox;
+    TextField m_addressField;
     Button m_connectButton;
     Button m_backButton;
+    
+    sf::TcpListener m_listener;
 };
