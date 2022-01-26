@@ -17,6 +17,4 @@ private:
     TextField m_addressField;
     Button m_connectButton;
     Button m_backButton;
-    
-    sf::TcpListener m_listener;
 };
