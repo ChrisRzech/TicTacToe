@@ -13,5 +13,5 @@ private:
     Resources(const Resources&) = delete;
     void operator=(const Resources&) = delete;
     
-    static Resources* m_instance;
+    static Resources* instance;
 };

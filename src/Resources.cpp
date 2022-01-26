@@ -1,14 +1,14 @@
 #include "Resources.hpp"
 #include <iostream>
 
-Resources* Resources::m_instance;
+Resources* Resources::instance;
 
 Resources& Resources::getResources()
 {
-    if(m_instance == nullptr)
-        m_instance = new Resources();
+    if(instance == nullptr)
+        instance = new Resources();
     
-    return *m_instance;
+    return *instance;
 }
 
 void fatalp(const std::string& msg)
