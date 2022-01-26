@@ -105,6 +105,13 @@ bool TextField::isFocused() const
     return m_isFocused;
 }
 
+void TextField::clear()
+{
+    m_text.setString("");
+    m_cursorPosition = 0;
+    m_cursorClock.restart();
+}
+
 void TextField::update(const Input& input)
 {
     if(input.isPressed(Input::Key::LeftClick))

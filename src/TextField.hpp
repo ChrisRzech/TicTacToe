@@ -33,6 +33,8 @@ public:
     void setFocus(bool);
     bool isFocused() const;
     
+    void clear();
+    
     void update(const Input&);
     void draw(sf::RenderTarget&, sf::RenderStates states) const override;
     
