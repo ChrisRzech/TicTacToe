@@ -1,6 +1,6 @@
 #include "SceneManager.hpp"
 
-SceneManager* SceneManager::m_instance;
+SceneManager* SceneManager::instance;
 
 SceneManager::~SceneManager()
 {
@@ -12,29 +12,33 @@ SceneManager::~SceneManager()
 
 void SceneManager::addScene(const std::string& name, Scene* scene)
 {
-    if(m_instance == nullptr)
-        m_instance = new SceneManager;
+    if(instance == nullptr)
+        instance = new SceneManager;
     
-    m_instance->m_scenes.insert(std::make_pair(name, scene));
+    instance->m_scenes.insert(std::make_pair(name, scene));
     
-    if(m_instance->m_currentScene == nullptr)
-        m_instance->m_currentScene = scene;
+    if(instance->m_currentScene == nullptr)
+        instance->m_currentScene = scene;
 }
 
 void SceneManager::changeScene(const std::string& name)
 {
-    if(m_instance == nullptr)
-        m_instance = new SceneManager;
+    if(instance == nullptr)
+        instance = new SceneManager;
     
-    m_instance->m_currentScene = m_instance->m_scenes.at(name);
+    if(instance->m_currentScene != nullptr)
+        instance->m_currentScene->exit();
+    
+    instance->m_currentScene = instance->m_scenes.at(name);
+    instance->m_currentScene->enter();
 }
 
 Scene* SceneManager::getScene()
 {
-    if(m_instance == nullptr)
-        m_instance = new SceneManager;
+    if(instance == nullptr)
+        instance = new SceneManager;
     
-    return m_instance->m_currentScene;
+    return instance->m_currentScene;
 }
 
 SceneManager::SceneManager()

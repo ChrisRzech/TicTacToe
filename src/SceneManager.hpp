@@ -16,7 +16,7 @@ private:
     SceneManager(const SceneManager&) = delete;
     void operator=(const SceneManager&) = delete;
     
-    static SceneManager* m_instance;
+    static SceneManager* instance;
     
     Scene* m_currentScene;
     std::unordered_map<std::string, Scene*> m_scenes;
