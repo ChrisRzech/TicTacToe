@@ -110,6 +110,7 @@ void TextField::clear()
     m_text.setString("");
     m_cursorPosition = 0;
     m_cursorClock.restart();
+    setCursorPosition(0);
 }
 
 void TextField::update(const Input& input)
