@@ -97,7 +97,7 @@ unsigned int TextField::getMaxCharacters() const
 
 void TextField::setFocus(bool focus)
 {
-    m_isFocused = focus;
+    enableCursor(focus);
 }
 
 bool TextField::isFocused() const
