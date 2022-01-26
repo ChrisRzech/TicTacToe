@@ -95,6 +95,16 @@ unsigned int TextField::getMaxCharacters() const
     return m_maxCharacters;
 }
 
+void TextField::setFocus(bool focus)
+{
+    m_isFocused = focus;
+}
+
+bool TextField::isFocused() const
+{
+    return m_isFocused;
+}
+
 void TextField::update(const Input& input)
 {
     if(input.isPressed(Input::Key::LeftClick))

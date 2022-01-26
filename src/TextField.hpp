@@ -30,6 +30,9 @@ public:
     void setMaxCharacters(unsigned int);
     unsigned int getMaxCharacters() const;
     
+    void setFocus(bool);
+    bool isFocused() const;
+    
     void update(const Input&);
     void draw(sf::RenderTarget&, sf::RenderStates states) const override;
     
