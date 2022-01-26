@@ -2,7 +2,6 @@
 #include "Resources.hpp"
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
-#include <iostream>
 
 extern sf::TcpSocket socket;
 extern bool isHost;
