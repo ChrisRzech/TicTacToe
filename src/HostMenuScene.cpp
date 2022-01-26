@@ -22,6 +22,11 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
 }
 
+void HostMenuScene::enter()
+{
+    m_listener.listen(5000);
+}
+
 void HostMenuScene::update(const Input& input)
 {
     //TODO listen for connection
@@ -31,6 +36,11 @@ void HostMenuScene::update(const Input& input)
     {
         SceneManager::changeScene("MainMenu");
     }
+}
+
+void HostMenuScene::exit()
+{
+    m_listener.close();
 }
 
 void HostMenuScene::draw() const

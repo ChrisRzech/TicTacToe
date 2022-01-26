@@ -8,7 +8,10 @@ class GameScene : public Scene
 public:
     GameScene(sf::RenderWindow&);
     
+    void enter() override;
     void update(const Input&) override;
+    void exit() override;
+    
     void draw() const override;
 
 private:

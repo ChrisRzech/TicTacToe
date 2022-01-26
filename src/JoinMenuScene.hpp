@@ -8,7 +8,10 @@ class JoinMenuScene : public Scene
 public:
     JoinMenuScene(sf::RenderWindow&);
     
+    void enter() override;
     void update(const Input&) override;
+    void exit() override;
+    
     void draw() const override;
     
 private:

@@ -24,6 +24,11 @@ MainMenuScene::MainMenuScene(sf::RenderWindow& window)
     m_joinButton.setPositionCenter(windowSize.x * 0.6, windowSize.y * 0.6);
 }
 
+void MainMenuScene::enter()
+{
+    
+}
+
 void MainMenuScene::update(const Input& input)
 {
     if(m_hostButton.isPressed(input))
@@ -34,6 +39,11 @@ void MainMenuScene::update(const Input& input)
     {
         SceneManager::changeScene("JoinMenu");
     }
+}
+
+void MainMenuScene::exit()
+{
+    
 }
 
 void MainMenuScene::draw() const

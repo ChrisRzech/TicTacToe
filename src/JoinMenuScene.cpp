@@ -17,6 +17,12 @@ JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.7);
 }
 
+void JoinMenuScene::enter()
+{
+    m_addressField.setFocus(true);
+    m_addressField.clear();
+}
+
 void JoinMenuScene::update(const Input& input)
 {
     if(m_connectButton.isPressed(input))
@@ -31,6 +37,11 @@ void JoinMenuScene::update(const Input& input)
     {
         m_addressField.update(input);
     }
+}
+
+void JoinMenuScene::exit()
+{
+    
 }
 
 void JoinMenuScene::draw() const

@@ -12,6 +12,11 @@ GameScene::GameScene(sf::RenderWindow& window)
     
 }
 
+void GameScene::enter()
+{
+    
+}
+
 void GameScene::update(const Input& input)
 {
     if(m_turn)
@@ -81,6 +86,11 @@ void GameScene::update(const Input& input)
             }
         }
     }
+}
+
+void GameScene::exit()
+{
+    
 }
 
 void GameScene::draw() const

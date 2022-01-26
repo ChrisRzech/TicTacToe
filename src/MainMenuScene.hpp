@@ -7,7 +7,10 @@ class MainMenuScene : public Scene
 public:
     MainMenuScene(sf::RenderWindow&);
     
+    void enter() override;
     void update(const Input&) override;
+    void exit() override;
+    
     void draw() const override;
     
 private:
