@@ -3,9 +3,6 @@
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 
-extern sf::TcpSocket socket;
-extern bool isHost;
-
 MainMenuScene::MainMenuScene(sf::RenderWindow& window)
     : Scene{window}, m_hostButton{"Host"}, m_joinButton{"Join"}
 {
