@@ -3,9 +3,9 @@
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 
-extern unsigned short PORT;
-extern sf::TcpSocket socket;
-extern bool isHost;
+extern unsigned short g_port;
+extern sf::TcpSocket g_socket;
+extern bool g_isHost;
 
 JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
     : Scene{window}, m_connectButton{"Connect"}, m_backButton{"Back"}
@@ -48,13 +48,13 @@ void JoinMenuScene::update(const Input& input)
     if(m_tryConnecting)
     {
         //NOTE: sf::TcpSocket::connect() doesn't work as expected when non-blocking
-        socket.setBlocking(true);
-        sf::Socket::Status status = socket.connect(m_address, PORT, sf::milliseconds(250));
-        socket.setBlocking(false);
+        g_socket.setBlocking(true);
+        sf::Socket::Status status = g_socket.connect(m_address, g_port, sf::milliseconds(250));
+        g_socket.setBlocking(false);
         
         if(status == sf::Socket::Status::Done)
         {
-            isHost = false;
+            g_isHost = false;
             SceneManager::changeScene("Game");
         }
         else

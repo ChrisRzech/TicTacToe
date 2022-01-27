@@ -3,8 +3,8 @@
 #include <thread>
 #include <iostream>
 
-extern sf::TcpSocket socket;
-extern bool isHost;
+extern sf::TcpSocket g_socket;
+extern bool g_isHost;
 
 GameScene::GameScene(sf::RenderWindow& window)
     : Scene{window}, m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()}
@@ -14,8 +14,8 @@ GameScene::GameScene(sf::RenderWindow& window)
 
 void GameScene::enter()
 {
-    socket.setBlocking(true);
-    m_turn = isHost;
+    g_socket.setBlocking(true);
+    m_turn = g_isHost;
     m_packetReceived = false;
     m_waitingForPacket = false;
 }
@@ -93,7 +93,7 @@ void GameScene::update(const Input& input)
 
 void GameScene::exit()
 {
-    socket.setBlocking(false);
+    g_socket.setBlocking(false);
 }
 
 void GameScene::draw() const
@@ -107,7 +107,7 @@ void GameScene::sendMove(const TicTacToeMove& move)
 {
     sf::Packet packet;
     packet << move;
-    socket.send(packet);
+    g_socket.send(packet);
 }
 
 void GameScene::receiveMove(TicTacToeMove& move)
@@ -117,7 +117,7 @@ void GameScene::receiveMove(TicTacToeMove& move)
     ()
     {
         sf::Packet packet;
-        sf::Socket::Status status = socket.receive(packet);
+        sf::Socket::Status status = g_socket.receive(packet);
         
         if(status == sf::Socket::Status::Done)
         {

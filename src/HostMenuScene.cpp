@@ -3,9 +3,9 @@
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 
-extern unsigned short PORT;
-extern sf::TcpSocket socket;
-extern bool isHost;
+extern unsigned short g_port;
+extern sf::TcpSocket g_socket;
+extern bool g_isHost;
 
 HostMenuScene::HostMenuScene(sf::RenderWindow& window)
     : Scene{window}, m_backButton{"Back"}
@@ -27,7 +27,7 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
 
 void HostMenuScene::enter()
 {
-    m_listener.listen(PORT);
+    m_listener.listen(g_port);
 }
 
 void HostMenuScene::update(const Input& input)
@@ -37,10 +37,10 @@ void HostMenuScene::update(const Input& input)
         SceneManager::changeScene("MainMenu");
     }
     
-    sf::Socket::Status status = m_listener.accept(socket);
+    sf::Socket::Status status = m_listener.accept(g_socket);
     if(status == sf::Socket::Status::Done)
     {
-        isHost = true;
+        g_isHost = true;
         SceneManager::changeScene("Game");
     }
 }

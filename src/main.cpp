@@ -7,13 +7,13 @@
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Window/Event.hpp>
 
-unsigned short PORT = 25'565;
-sf::TcpSocket socket;
-bool isHost = false;
+unsigned short g_port = 25'565;
+sf::TcpSocket g_socket;
+bool g_isHost = false;
 
 int main()
 {
-    socket.setBlocking(false);
+    g_socket.setBlocking(false);
 
     sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
     window.setFramerateLimit(60);
