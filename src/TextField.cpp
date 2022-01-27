@@ -129,43 +129,100 @@ void TextField::update(const Input& input)
     {
         if(m_text.getString().getSize() < m_maxCharacters)
         {
-            std::string keyPressed;
+            char keyPressed = '\0';
             
-            if(input.isPressed(Input::Key::Num0))
-                keyPressed = "0";
+            if(input.isPressed(Input::Key::A))
+                keyPressed = 'a';
+            else if(input.isPressed(Input::Key::B))
+                keyPressed = 'b';
+            else if(input.isPressed(Input::Key::C))
+                keyPressed = 'c';
+            else if(input.isPressed(Input::Key::D))
+                keyPressed = 'd';
+            else if(input.isPressed(Input::Key::E))
+                keyPressed = 'e';
+            else if(input.isPressed(Input::Key::F))
+                keyPressed = 'f';
+            else if(input.isPressed(Input::Key::G))
+                keyPressed = 'g';
+            else if(input.isPressed(Input::Key::H))
+                keyPressed = 'h';
+            else if(input.isPressed(Input::Key::I))
+                keyPressed = 'i';
+            else if(input.isPressed(Input::Key::J))
+                keyPressed = 'j';
+            else if(input.isPressed(Input::Key::K))
+                keyPressed = 'k';
+            else if(input.isPressed(Input::Key::L))
+                keyPressed = 'l';
+            else if(input.isPressed(Input::Key::M))
+                keyPressed = 'm';
+            else if(input.isPressed(Input::Key::N))
+                keyPressed = 'n';
+            else if(input.isPressed(Input::Key::O))
+                keyPressed = 'o';
+            else if(input.isPressed(Input::Key::P))
+                keyPressed = 'p';
+            else if(input.isPressed(Input::Key::Q))
+                keyPressed = 'q';
+            else if(input.isPressed(Input::Key::R))
+                keyPressed = 'r';
+            else if(input.isPressed(Input::Key::S))
+                keyPressed = 's';
+            else if(input.isPressed(Input::Key::T))
+                keyPressed = 't';
+            else if(input.isPressed(Input::Key::U))
+                keyPressed = 'u';
+            else if(input.isPressed(Input::Key::V))
+                keyPressed = 'v';
+            else if(input.isPressed(Input::Key::W))
+                keyPressed = 'w';
+            else if(input.isPressed(Input::Key::X))
+                keyPressed = 'x';
+            else if(input.isPressed(Input::Key::Y))
+                keyPressed = 'y';
+            else if(input.isPressed(Input::Key::Z))
+                keyPressed = 'z';
+            else if(input.isPressed(Input::Key::Num0))
+                keyPressed = '0';
             else if(input.isPressed(Input::Key::Num1))
-                keyPressed = "1";
+                keyPressed = '1';
             else if(input.isPressed(Input::Key::Num2))
-                keyPressed = "2";
+                keyPressed = '2';
             else if(input.isPressed(Input::Key::Num3))
-                keyPressed = "3";
+                keyPressed = '3';
             else if(input.isPressed(Input::Key::Num4))
-                keyPressed = "4";
+                keyPressed = '4';
             else if(input.isPressed(Input::Key::Num5))
-                keyPressed = "5";
+                keyPressed = '5';
             else if(input.isPressed(Input::Key::Num6))
-                keyPressed = "6";
+                keyPressed = '6';
             else if(input.isPressed(Input::Key::Num7))
-                keyPressed = "7";
+                keyPressed = '7';
             else if(input.isPressed(Input::Key::Num8))
-                keyPressed = "8";
+                keyPressed = '8';
             else if(input.isPressed(Input::Key::Num9))
-                keyPressed = "9";
+                keyPressed = '9';
             else if(input.isPressed(Input::Key::Period))
-                keyPressed = ".";
-            else
+                keyPressed = '.';
+            else if(input.isPressed(Input::Key::Backspace) && m_cursorPosition != 0)
             {
-                if(input.isPressed(Input::Key::Backspace) && m_cursorPosition != 0)
-                {
-                    sf::String string = m_text.getString();
-                    string.erase(m_cursorPosition - 1);
-                    m_text.setString(string);
-                    
-                    setCursorPosition(--m_cursorPosition);
-                }
+                sf::String string = m_text.getString();
+                string.erase(m_cursorPosition - 1);
+                m_text.setString(string);
+                
+                setCursorPosition(--m_cursorPosition);
             }
             
-            if(!keyPressed.empty())
+            /* Control keys */
+            if(input.isPressed(Input::Key::LShift))
+            {
+                if(keyPressed >= 'a' && keyPressed <= 'z')
+                    keyPressed -= 'A';
+            }
+            
+            /* Append key to string */
+            if(keyPressed != '\0')
             {
                 m_text.setString(m_text.getString() + keyPressed);
                 setCursorPosition(++m_cursorPosition);
