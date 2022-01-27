@@ -1,7 +1,6 @@
 #include "MainMenuScene.hpp"
 #include "Resources.hpp"
 #include "SceneManager.hpp"
-#include <sfml/Network/TcpSocket.hpp>
 
 MainMenuScene::MainMenuScene(sf::RenderWindow& window)
     : Scene{window}, m_hostButton{"Host"}, m_joinButton{"Join"}
