@@ -27,7 +27,7 @@ void JoinMenuScene::enter()
 
 void JoinMenuScene::update(const Input& input)
 {
-    if(m_connectButton.isPressed(input))
+    if(m_connectButton.isPressed(input) || input.isPressed(Input::Key::Enter))
     {
         std::string string = m_addressField.getText();
         m_address = (string == "localhost" ? sf::IpAddress::getLocalAddress() : string);

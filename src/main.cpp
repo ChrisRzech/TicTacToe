@@ -21,6 +21,7 @@ int main()
     const std::vector<Input::Key> polledInputs =
     {
         Input::Key::LeftClick,
+        Input::Key::Enter,
         
         Input::Key::Num0,
         Input::Key::Num1,
