@@ -15,8 +15,6 @@ public:
     void draw() const override;
     
 private:
-    void hostServer();
-    
     sf::Text m_waitText;
     Button m_backButton;
     
