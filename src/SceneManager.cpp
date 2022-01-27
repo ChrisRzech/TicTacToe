@@ -16,9 +16,6 @@ void SceneManager::addScene(const std::string& name, Scene* scene)
         instance = new SceneManager;
     
     instance->m_scenes.insert(std::make_pair(name, scene));
-    
-    if(instance->m_currentScene == nullptr)
-        instance->m_currentScene = scene;
 }
 
 void SceneManager::changeScene(const std::string& name)
