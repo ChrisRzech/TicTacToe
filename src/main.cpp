@@ -5,9 +5,7 @@
 #include "JoinMenuScene.hpp"
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
-#include <sfml/Network/TcpListener.hpp>
 #include <sfml/Window/Event.hpp>
-#include <iostream>
 
 static unsigned short PORT = 50'000;
 sf::TcpSocket socket;
