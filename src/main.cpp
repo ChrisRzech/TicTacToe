@@ -7,7 +7,7 @@
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Window/Event.hpp>
 
-static unsigned short PORT = 50'000;
+unsigned short PORT = 25'565;
 sf::TcpSocket socket;
 bool isHost = false;
 

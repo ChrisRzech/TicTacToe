@@ -3,6 +3,7 @@
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 
+extern unsigned short PORT;
 extern sf::TcpSocket socket;
 extern bool isHost;
 
@@ -48,7 +49,7 @@ void JoinMenuScene::update(const Input& input)
     {
         //NOTE: sf::TcpSocket::connect() doesn't work as expected when non-blocking
         socket.setBlocking(true);
-        sf::Socket::Status status = socket.connect(m_address, 5000, sf::milliseconds(250));
+        sf::Socket::Status status = socket.connect(m_address, PORT, sf::milliseconds(250));
         socket.setBlocking(false);
         
         if(status == sf::Socket::Status::Done)

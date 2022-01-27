@@ -3,6 +3,7 @@
 #include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 
+extern unsigned short PORT;
 extern sf::TcpSocket socket;
 extern bool isHost;
 
@@ -26,7 +27,7 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
 
 void HostMenuScene::enter()
 {
-    m_listener.listen(5000);
+    m_listener.listen(PORT);
 }
 
 void HostMenuScene::update(const Input& input)
