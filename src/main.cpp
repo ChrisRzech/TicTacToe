@@ -13,8 +13,6 @@ bool g_isHost = false;
 
 int main()
 {
-    g_socket.setBlocking(false);
-
     sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
     window.setFramerateLimit(60);
     

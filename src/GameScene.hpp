@@ -2,6 +2,7 @@
 #include "Scene.hpp"
 #include "TicTacToeDrawer.hpp"
 #include "Packets.hpp"
+#include <sfml/Network/SocketSelector.hpp>
 
 class GameScene : public Scene
 {

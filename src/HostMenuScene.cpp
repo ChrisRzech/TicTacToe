@@ -21,13 +21,12 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
     
     /* Buttons */
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
-    
-    m_listener.setBlocking(false);
 }
 
 void HostMenuScene::enter()
 {
     m_listener.listen(g_port);
+    m_selector.add(m_listener);
 }
 
 void HostMenuScene::update(const Input& input)
@@ -37,17 +36,21 @@ void HostMenuScene::update(const Input& input)
         SceneManager::changeScene("MainMenu");
     }
     
-    sf::Socket::Status status = m_listener.accept(g_socket);
-    if(status == sf::Socket::Status::Done)
+    if(m_selector.wait(sf::milliseconds(10)))
     {
-        g_isHost = true;
-        SceneManager::changeScene("Game");
+        sf::Socket::Status status = m_listener.accept(g_socket);
+        if(status == sf::Socket::Status::Done)
+        {
+            g_isHost = true;
+            SceneManager::changeScene("Game");
+        }
     }
 }
 
 void HostMenuScene::exit()
 {
     m_listener.close();
+    m_selector.clear();
 }
 
 void HostMenuScene::draw() const

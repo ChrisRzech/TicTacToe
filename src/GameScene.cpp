@@ -14,7 +14,6 @@ GameScene::GameScene(sf::RenderWindow& window)
 
 void GameScene::enter()
 {
-    g_socket.setBlocking(true);
     m_turn = g_isHost;
     m_packetReceived = false;
     m_waitingForPacket = false;
@@ -93,7 +92,7 @@ void GameScene::update(const Input& input)
 
 void GameScene::exit()
 {
-    g_socket.setBlocking(false);
+    
 }
 
 void GameScene::draw() const

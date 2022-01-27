@@ -49,9 +49,7 @@ void JoinMenuScene::update(const Input& input)
     if(m_tryConnecting)
     {
         //NOTE: sf::TcpSocket::connect() doesn't work as expected when non-blocking
-        g_socket.setBlocking(true);
         sf::Socket::Status status = g_socket.connect(m_address, g_port, sf::milliseconds(250));
-        g_socket.setBlocking(false);
         
         if(status == sf::Socket::Status::Done)
         {
