@@ -34,6 +34,7 @@ void JoinMenuScene::update(const Input& input)
         m_address = (string == "localhost" ? sf::IpAddress::getLocalAddress() : string);
         //NOTE: sf::IpAddress can block for a little bit
         
+        //sf::IpAddress validates the address a bit
         m_tryConnecting = m_address != sf::IpAddress::None;
     }
     else if(m_backButton.isPressed(input))
