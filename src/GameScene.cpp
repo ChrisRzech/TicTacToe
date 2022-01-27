@@ -7,14 +7,17 @@ extern sf::TcpSocket socket;
 extern bool isHost;
 
 GameScene::GameScene(sf::RenderWindow& window)
-    : Scene{window}, m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()}, m_turn{isHost}, m_packetReceived{false}, m_waitingForPacket{false}
+    : Scene{window}, m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()}
 {
     
 }
 
 void GameScene::enter()
 {
-    
+    socket.setBlocking(true);
+    m_turn = isHost;
+    m_packetReceived = false;
+    m_waitingForPacket = false;
 }
 
 void GameScene::update(const Input& input)
@@ -90,7 +93,7 @@ void GameScene::update(const Input& input)
 
 void GameScene::exit()
 {
-    
+    socket.setBlocking(false);
 }
 
 void GameScene::draw() const
