@@ -67,8 +67,8 @@ bool setupSocket(sf::TcpSocket& socket)
 
 int main()
 {
-    //isHost = setupSocket(socket);
-    
+    socket.setBlocking(false);
+
     sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
     window.setFramerateLimit(60);
     
@@ -89,7 +89,15 @@ int main()
         Input::Key::Period,
         Input::Key::Backspace,
         Input::Key::Left,
-        Input::Key::Right
+        Input::Key::Right,
+        
+        Input::Key::L,
+        Input::Key::O,
+        Input::Key::C,
+        Input::Key::A,
+        Input::Key::H,
+        Input::Key::S,
+        Input::Key::T
     };
     Input input(window, 10, polledInputs);
     

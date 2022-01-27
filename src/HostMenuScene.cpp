@@ -20,6 +20,8 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
     
     /* Buttons */
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    
+    m_listener.setBlocking(false);
 }
 
 void HostMenuScene::enter()
@@ -29,12 +31,16 @@ void HostMenuScene::enter()
 
 void HostMenuScene::update(const Input& input)
 {
-    //TODO listen for connection
-    //hostServer();
-    
     if(m_backButton.isPressed(input))
     {
         SceneManager::changeScene("MainMenu");
+    }
+    
+    sf::Socket::Status status = m_listener.accept(socket);
+    if(status == sf::Socket::Status::Done)
+    {
+        isHost = true;
+        SceneManager::changeScene("Game");
     }
 }
 
@@ -49,9 +55,4 @@ void HostMenuScene::draw() const
     m_window.draw(m_waitText);
     m_window.draw(m_backButton);
     m_window.display();
-}
-
-void HostMenuScene::hostServer()
-{
-    
 }

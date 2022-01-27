@@ -21,13 +21,19 @@ void JoinMenuScene::enter()
 {
     m_addressField.setFocus(true);
     m_addressField.clear();
+    
+    m_tryConnecting = false;
 }
 
 void JoinMenuScene::update(const Input& input)
 {
     if(m_connectButton.isPressed(input))
     {
+        std::string string = m_addressField.getText();
+        m_address = (string == "localhost" ? sf::IpAddress::getLocalAddress() : string);
+        //NOTE: sf::IpAddress can block for a little bit
         
+        m_tryConnecting = m_address != sf::IpAddress::None;
     }
     else if(m_backButton.isPressed(input))
     {
@@ -36,6 +42,24 @@ void JoinMenuScene::update(const Input& input)
     else
     {
         m_addressField.update(input);
+    }
+    
+    if(m_tryConnecting)
+    {
+        //NOTE: sf::TcpSocket::connect() doesn't work as expected when non-blocking
+        socket.setBlocking(true);
+        sf::Socket::Status status = socket.connect(m_address, 5000, sf::milliseconds(250));
+        socket.setBlocking(false);
+        
+        if(status == sf::Socket::Status::Done)
+        {
+            isHost = false;
+            SceneManager::changeScene("Game");
+        }
+        else
+        {
+            m_tryConnecting = false;
+        }
     }
 }
 
@@ -51,9 +75,4 @@ void JoinMenuScene::draw() const
     m_window.draw(m_connectButton);
     m_window.draw(m_backButton);
     m_window.display();
-}
-
-void JoinMenuScene::joinServer()
-{
-    
 }
