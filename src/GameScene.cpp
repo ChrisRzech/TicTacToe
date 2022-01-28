@@ -1,6 +1,5 @@
 #include "GameScene.hpp"
 #include <sfml/Network/TcpSocket.hpp>
-#include <thread>
 #include <iostream>
 
 extern sf::TcpSocket g_socket;
@@ -52,7 +51,7 @@ void GameScene::update(const Input& input)
 
 void GameScene::exit()
 {
-    
+    m_selector.clear();
 }
 
 void GameScene::draw() const
