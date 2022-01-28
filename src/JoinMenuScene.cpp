@@ -8,10 +8,11 @@ extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
 JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
-    : Scene{window}, m_connectButton{"Connect"}, m_backButton{"Back"}
+    : Scene{window}, m_label{Resources::getResources().font, "Enter address"}, m_connectButton{"Connect"}, m_backButton{"Back"}
 {
     sf::Vector2u windowSize = window.getSize();
     
+    m_label.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.4);
     m_addressField.setSize(300, 35);
     m_addressField.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
     m_connectButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
@@ -71,6 +72,7 @@ void JoinMenuScene::exit()
 void JoinMenuScene::draw() const
 {
     m_window.clear();
+    m_window.draw(m_label);
     m_window.draw(m_addressField);
     m_window.draw(m_connectButton);
     m_window.draw(m_backButton);

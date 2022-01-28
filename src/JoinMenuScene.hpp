@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "TextLabel.hpp"
 #include "TextField.hpp"
 #include <sfml/Network/IpAddress.hpp>
 
@@ -16,6 +17,7 @@ public:
     void draw() const override;
     
 private:
+    TextLabel m_label;
     TextField m_addressField;
     Button m_connectButton;
     Button m_backButton;
