@@ -65,17 +65,17 @@ sf::Vector2f TextLabel::getPosition() const
     return m_box.getPosition();
 }
 
-void TextLabel::setSize(float x, float y)
+void TextLabel::setBackgroundSize(float x, float y)
 {
-    setSize(sf::Vector2f{x, y});
+    setBackgroundSize(sf::Vector2f{x, y});
 }
 
-void TextLabel::setSize(const sf::Vector2f& size)
+void TextLabel::setBackgroundSize(const sf::Vector2f& size)
 {
     m_box.setSize(size);
 }
 
-sf::Vector2f TextLabel::getSize() const
+sf::Vector2f TextLabel::getBackgroundSize() const
 {
     return m_box.getSize();
 }

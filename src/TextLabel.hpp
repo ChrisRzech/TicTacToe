@@ -24,9 +24,9 @@ public:
     void setPositionCenter(const sf::Vector2f&);
     sf::Vector2f getPosition() const;
     
-    void setSize(float x, float y);
-    void setSize(const sf::Vector2f&);
-    sf::Vector2f getSize() const;
+    void setBackgroundSize(float x, float y);
+    void setBackgroundSize(const sf::Vector2f&);
+    sf::Vector2f getBackgroundSize() const;
     
     void setBorderThickness(unsigned int);
     unsigned int getBorderThickness() const;
