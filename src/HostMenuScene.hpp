@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "TextLabel.hpp"
 #include <sfml/Network/SocketSelector.hpp>
 #include <sfml/Network/TcpListener.hpp>
 
@@ -16,7 +17,7 @@ public:
     void draw() const override;
     
 private:
-    sf::Text m_waitText;
+    TextLabel m_waitLabel;
     Button m_backButton;
     
     sf::SocketSelector m_selector;

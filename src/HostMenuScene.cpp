@@ -8,16 +8,12 @@ extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
 HostMenuScene::HostMenuScene(sf::RenderWindow& window)
-    : Scene{window}, m_backButton{"Back"}
+    : Scene{window}, m_waitLabel{Resources::getResources().font, "Waiting for opponent..."}, m_backButton{"Back"}
 {
     sf::Vector2u windowSize = window.getSize();
 
     /* Wait text */
-    m_waitText.setFont(Resources::getResources().font);
-    m_waitText.setString("Waiting for opponent...");
-    sf::FloatRect waitTextRect = m_waitText.getLocalBounds();
-    sf::Vector2f waitTextPositionCentered(windowSize.x * 0.5 - waitTextRect.width * 0.5, windowSize.y * 0.5 - waitTextRect.height * 0.5);
-    m_waitText.setPosition(waitTextPositionCentered - sf::Vector2f{waitTextRect.left, waitTextRect.top});
+    m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
     
     /* Buttons */
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
@@ -56,7 +52,7 @@ void HostMenuScene::exit()
 void HostMenuScene::draw() const
 {
     m_window.clear();
-    m_window.draw(m_waitText);
+    m_window.draw(m_waitLabel);
     m_window.draw(m_backButton);
     m_window.display();
 }
