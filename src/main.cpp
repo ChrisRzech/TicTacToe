@@ -13,7 +13,7 @@ bool g_isHost = false;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode{600, 600}, "TicTacToe", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode{600, 600}, "Tic-Tac-Toe", sf::Style::Close);
     window.setFramerateLimit(60);
     
     const std::vector<Input::Key> polledInputs =
