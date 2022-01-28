@@ -18,6 +18,8 @@ public:
 private:
     void sendMove(const TicTacToeMove& move);
     std::optional<TicTacToeMove> receiveMove();
+    
+    void handleWinner(const std::optional<bool>& winner);
 
     TicTacToe m_ttt;
     TicTacToeDrawer m_tttDrawer;

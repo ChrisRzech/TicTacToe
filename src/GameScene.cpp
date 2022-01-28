@@ -29,29 +29,11 @@ void GameScene::update(const Input& input)
             
             if(!m_ttt.getMark(cell.first, cell.second).has_value())
             {
-                m_ttt.setMark(cell.first, cell.second);
-                
                 sendMove(TicTacToeMove{cell.first, cell.second});
                 
                 m_turn = false;
-                
-                std::optional<bool> winner = m_ttt.checkWin();
-                
-                if(winner.has_value())
-                {
-                    if(winner.value())
-                    {
-                        std::cout << "X" << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "O" << std::endl;
-                    }
-                }
-                else
-                {
-                    std::cout << "No winner" << std::endl;
-                }
+                m_ttt.setMark(cell.first, cell.second);
+                handleWinner(m_ttt.checkWin());
             }
         }
     }
@@ -63,24 +45,7 @@ void GameScene::update(const Input& input)
         {
             m_turn = true;
             m_ttt.setMark(move->row, move->col);
-            
-            std::optional<bool> winner = m_ttt.checkWin();
-            
-            if(winner.has_value())
-            {
-                if(winner.value())
-                {
-                    std::cout << "X" << std::endl;
-                }
-                else
-                {
-                    std::cout << "O" << std::endl;
-                }
-            }
-            else
-            {
-                std::cout << "No winner" << std::endl;
-            }
+            handleWinner(m_ttt.checkWin());
         }
     }
 }
@@ -121,4 +86,23 @@ std::optional<TicTacToeMove> GameScene::receiveMove()
     }
     
     return move;
+}
+
+void GameScene::handleWinner(const std::optional<bool>& winner)
+{
+    if(winner.has_value())
+    {
+        if(winner.value())
+        {
+            std::cout << "X" << std::endl;
+        }
+        else
+        {
+            std::cout << "O" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "No winner" << std::endl;
+    }
 }
