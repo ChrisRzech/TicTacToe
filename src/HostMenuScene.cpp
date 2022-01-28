@@ -12,10 +12,7 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
 {
     sf::Vector2u windowSize = window.getSize();
 
-    /* Wait text */
     m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
-    
-    /* Buttons */
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
 }
 

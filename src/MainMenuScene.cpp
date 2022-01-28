@@ -7,12 +7,10 @@ MainMenuScene::MainMenuScene(sf::RenderWindow& window)
 {
     sf::Vector2u windowSize = window.getSize();
     
-    /* Title */
     m_titleLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.4);
     m_titleLabel.setTextColor(sf::Color::White);
     m_titleLabel.setBackgroundColor(sf::Color::Transparent);
     
-    /* Buttons */
     m_hostButton.setPositionCenter(windowSize.x * 0.4, windowSize.y * 0.6);
     m_joinButton.setPositionCenter(windowSize.x * 0.6, windowSize.y * 0.6);
 }
