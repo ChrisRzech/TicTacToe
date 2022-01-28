@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.hpp"
 #include "Button.hpp"
+#include "TextLabel.hpp"
 
 class MainMenuScene : public Scene
 {
@@ -14,7 +15,7 @@ public:
     void draw() const override;
     
 private:
-    sf::Text m_titleText;
+    TextLabel m_titleLabel;
     Button m_hostButton;
     Button m_joinButton;
 };
