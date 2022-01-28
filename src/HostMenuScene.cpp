@@ -14,10 +14,10 @@ HostMenuScene::HostMenuScene(sf::RenderWindow& window)
 {
     sf::Vector2u windowSize = window.getSize();
 
-    m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
     
     m_backButton.setBackgroundSize(80, 40);
-    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
     m_backButton.setBorderThickness(1);
     m_backButton.setTextColor(sf::Color::White);
     m_backButton.setBackgroundColor(sf::Color::Transparent);

@@ -15,20 +15,20 @@ JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
 {
     sf::Vector2u windowSize = window.getSize();
     
-    m_label.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.4);
+    m_label.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.35);
     
     m_addressField.setSize(300, 35);
-    m_addressField.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    m_addressField.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
     
     m_connectButton.setBackgroundSize(120, 40);
-    m_connectButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_connectButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
     m_connectButton.setBorderThickness(1);
     m_connectButton.setTextColor(sf::Color::White);
     m_connectButton.setBackgroundColor(sf::Color::Transparent);
     m_connectButton.setBorderColor(sf::Color::White);
     
     m_backButton.setBackgroundSize(80, 40);
-    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.7);
+    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.65);
     m_backButton.setBorderThickness(1);
     m_backButton.setTextColor(sf::Color::White);
     m_backButton.setBackgroundColor(sf::Color::Transparent);
