@@ -8,12 +8,20 @@ extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
 HostMenuScene::HostMenuScene(sf::RenderWindow& window)
-    : Scene{window}, m_waitLabel{Resources::getResources().font, "Waiting for opponent..."}, m_backButton{"Back"}
+    : Scene{window},
+      m_waitLabel{Resources::getResources().font, "Waiting for opponent..."},
+      m_backButton{Resources::getResources().font, "Back"}
 {
     sf::Vector2u windowSize = window.getSize();
 
     m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    
+    m_backButton.setBackgroundSize(80, 40);
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_backButton.setBorderThickness(1);
+    m_backButton.setTextColor(sf::Color::White);
+    m_backButton.setBackgroundColor(sf::Color::Transparent);
+    m_backButton.setBorderColor(sf::Color::White);
 }
 
 void HostMenuScene::enter()

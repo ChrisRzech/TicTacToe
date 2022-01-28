@@ -8,15 +8,31 @@ extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
 JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
-    : Scene{window}, m_label{Resources::getResources().font, "Enter address"}, m_connectButton{"Connect"}, m_backButton{"Back"}
+    : Scene{window},
+      m_label{Resources::getResources().font, "Enter address"},
+      m_connectButton{Resources::getResources().font, "Connect"},
+      m_backButton{Resources::getResources().font, "Back"}
 {
     sf::Vector2u windowSize = window.getSize();
     
     m_label.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.4);
+    
     m_addressField.setSize(300, 35);
     m_addressField.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    
+    m_connectButton.setBackgroundSize(120, 40);
     m_connectButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_connectButton.setBorderThickness(1);
+    m_connectButton.setTextColor(sf::Color::White);
+    m_connectButton.setBackgroundColor(sf::Color::Transparent);
+    m_connectButton.setBorderColor(sf::Color::White);
+    
+    m_backButton.setBackgroundSize(80, 40);
     m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.7);
+    m_backButton.setBorderThickness(1);
+    m_backButton.setTextColor(sf::Color::White);
+    m_backButton.setBackgroundColor(sf::Color::Transparent);
+    m_backButton.setBorderColor(sf::Color::White);
 }
 
 void JoinMenuScene::enter()

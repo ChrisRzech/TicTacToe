@@ -3,7 +3,10 @@
 #include "SceneManager.hpp"
 
 MainMenuScene::MainMenuScene(sf::RenderWindow& window)
-    : Scene{window}, m_titleLabel{Resources::getResources().font, "Tic-Tac-Toe"}, m_hostButton{"Host"}, m_joinButton{"Join"}
+    : Scene{window},
+      m_titleLabel{Resources::getResources().font, "Tic-Tac-Toe"},
+      m_hostButton{Resources::getResources().font, "Host"},
+      m_joinButton{Resources::getResources().font, "Join"}
 {
     sf::Vector2u windowSize = window.getSize();
     
@@ -11,8 +14,19 @@ MainMenuScene::MainMenuScene(sf::RenderWindow& window)
     m_titleLabel.setTextColor(sf::Color::White);
     m_titleLabel.setBackgroundColor(sf::Color::Transparent);
     
+    m_hostButton.setBackgroundSize(80, 40);
     m_hostButton.setPositionCenter(windowSize.x * 0.4, windowSize.y * 0.6);
+    m_hostButton.setBorderThickness(1);
+    m_hostButton.setTextColor(sf::Color::White);
+    m_hostButton.setBackgroundColor(sf::Color::Transparent);
+    m_hostButton.setBorderColor(sf::Color::White);
+    
+    m_joinButton.setBackgroundSize(80, 40);
     m_joinButton.setPositionCenter(windowSize.x * 0.6, windowSize.y * 0.6);
+    m_joinButton.setBorderThickness(1);
+    m_joinButton.setTextColor(sf::Color::White);
+    m_joinButton.setBackgroundColor(sf::Color::Transparent);
+    m_joinButton.setBorderColor(sf::Color::White);
 }
 
 void MainMenuScene::enter()
