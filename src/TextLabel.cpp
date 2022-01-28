@@ -19,6 +19,7 @@ const sf::Font* TextLabel::getFont() const
 void TextLabel::setText(const std::string& text)
 {
     m_text.setString(text);
+    setPosition(getPosition());
 }
 
 std::string TextLabel::getText() const
