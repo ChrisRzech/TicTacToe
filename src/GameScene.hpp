@@ -17,12 +17,11 @@ public:
 
 private:
     void sendMove(const TicTacToeMove& move);
-    void receiveMove(TicTacToeMove& move);
+    std::optional<TicTacToeMove> receiveMove();
 
     TicTacToe m_ttt;
     TicTacToeDrawer m_tttDrawer;
+    
     bool m_turn;
-    bool m_packetReceived;
-    bool m_waitingForPacket;
-    TicTacToeMove m_packetData;
+    sf::SocketSelector m_selector;
 };

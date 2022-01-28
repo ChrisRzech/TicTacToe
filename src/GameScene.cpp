@@ -15,8 +15,8 @@ GameScene::GameScene(sf::RenderWindow& window)
 void GameScene::enter()
 {
     m_turn = g_isHost;
-    m_packetReceived = false;
-    m_waitingForPacket = false;
+    
+    m_selector.add(g_socket);
 }
 
 void GameScene::update(const Input& input)
@@ -57,17 +57,12 @@ void GameScene::update(const Input& input)
     }
     else
     {
-        if(!m_waitingForPacket)
+        std::optional<TicTacToeMove> move = receiveMove();
+        
+        if(move.has_value())
         {
-            m_waitingForPacket = true;
-            receiveMove(m_packetData);
-        }
-        else if(m_packetReceived)
-        {
-            m_packetReceived = false;
             m_turn = true;
-            
-            m_ttt.setMark(m_packetData.row, m_packetData.col);
+            m_ttt.setMark(move->row, move->col);
             
             std::optional<bool> winner = m_ttt.checkWin();
             
@@ -109,24 +104,21 @@ void GameScene::sendMove(const TicTacToeMove& move)
     g_socket.send(packet);
 }
 
-void GameScene::receiveMove(TicTacToeMove& move)
+std::optional<TicTacToeMove> GameScene::receiveMove()
 {
-    auto f =
-    [this]
-    ()
+    std::optional<TicTacToeMove> move;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
     {
         sf::Packet packet;
         sf::Socket::Status status = g_socket.receive(packet);
-        
         if(status == sf::Socket::Status::Done)
         {
-            packet >> m_packetData;
-            m_packetReceived = true;
-            m_waitingForPacket = false;
+            TicTacToeMove receivedMove;
+            packet >> receivedMove;
+            move = receivedMove;
         }
-    };
+    }
     
-    /* Spawn a detached thread since the other player's move can take a long time */
-    std::thread thread(f);
-    thread.detach();
+    return move;
 }
