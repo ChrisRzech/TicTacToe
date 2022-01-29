@@ -28,8 +28,8 @@ public:
     void setBackgroundSize(const sf::Vector2f&);
     sf::Vector2f getBackgroundSize() const;
     
-    void setBorderThickness(unsigned int);
-    unsigned int getBorderThickness() const;
+    void setBorderThickness(float);
+    float getBorderThickness() const;
     
     void setTextColor(const sf::Color&);
     sf::Color getTextColor() const;

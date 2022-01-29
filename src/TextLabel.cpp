@@ -81,12 +81,12 @@ sf::Vector2f TextLabel::getBackgroundSize() const
     return m_box.getSize();
 }
 
-void TextLabel::setBorderThickness(unsigned int thickness)
+void TextLabel::setBorderThickness(float thickness)
 {
     m_box.setOutlineThickness(thickness);
 }
 
-unsigned int TextLabel::getBorderThickness() const
+float TextLabel::getBorderThickness() const
 {
     return m_box.getOutlineThickness();
 }
