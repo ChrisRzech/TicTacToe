@@ -9,7 +9,8 @@ GameScene::GameScene(sf::RenderWindow& window)
     : Scene{window},
       m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()},
       m_winnerLabel{Resources::getResources().font, ""},
-      m_restartButton{Resources::getResources().font, "Restart"}
+      m_restartButton{Resources::getResources().font, "Restart"},
+      m_waitRestartLabel{Resources::getResources().font, "Waiting for opponent..."}
 {
     sf::Vector2u windowSize = window.getSize();
     
@@ -26,28 +27,31 @@ GameScene::GameScene(sf::RenderWindow& window)
     m_restartButton.setTextColor(sf::Color::White);
     m_restartButton.setBackgroundColor(sf::Color::Black);
     m_restartButton.setBorderColor(sf::Color::White);
+    
+    m_waitRestartLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_waitRestartLabel.setTextColor(sf::Color::White);
+    m_waitRestartLabel.setBackgroundColor(sf::Color::Black);
 }
 
 void GameScene::enter()
 {
-    m_myMark = (g_isHost ? TicTacToe::Mark::X : TicTacToe::Mark::O);
-    m_ttt.setTurn(TicTacToe::Mark::X);
-    
     m_selector.add(g_socket);
-    
-    m_gameover = false;
+    m_myMark = (g_isHost ? TicTacToe::Mark::X : TicTacToe::Mark::O);
+    restart();
 }
 
 void GameScene::update(const Input& input)
 {
     if(m_gameover)
     {
-        if(m_restartButton.isPressed(input))
+        if(m_wantRestart && receiveRestart())
         {
-            m_ttt.clear();
-            
-            m_ttt.setTurn(TicTacToe::Mark::X);
-            m_gameover = false;
+            restart();
+        }
+        else if(m_restartButton.isPressed(input))
+        {
+            m_wantRestart = true;
+            sendRestart();
         }
     }
     else
@@ -92,9 +96,22 @@ void GameScene::draw() const
     if(m_gameover)
     {
         m_window.draw(m_winnerLabel);
-        m_window.draw(m_restartButton);
+        
+        if(m_wantRestart)
+            m_window.draw(m_waitRestartLabel);
+        else
+            m_window.draw(m_restartButton);
     }
     m_window.display();
+}
+
+void GameScene::restart()
+{
+    m_ttt.clear();
+    
+    m_ttt.setTurn(TicTacToe::Mark::X);
+    m_gameover = false;
+    m_wantRestart = false;
 }
 
 void GameScene::sendMove(const TicTacToeMove& move)
@@ -121,6 +138,32 @@ std::optional<TicTacToeMove> GameScene::receiveMove()
     }
     
     return move;
+}
+
+void GameScene::sendRestart()
+{
+    sf::Int8 x = 0; //Don't care what is sent, just let them know to restart
+    sf::Packet packet;
+    packet << x;
+    g_socket.send(packet);
+}
+
+bool GameScene::receiveRestart()
+{
+    bool restart = false;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        if(status == sf::Socket::Status::Done)
+        {
+            //Don't care what is received, just wanted to know if they want to restart
+            restart = true;
+        }
+    }
+    
+    return restart;
 }
 
 void GameScene::handleWinner(TicTacToe::WinCondition winner)

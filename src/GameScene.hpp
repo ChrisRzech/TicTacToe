@@ -18,8 +18,13 @@ public:
     void draw() const override;
 
 private:
+    void restart();
+    
     void sendMove(const TicTacToeMove& move);
     std::optional<TicTacToeMove> receiveMove();
+    
+    void sendRestart();
+    bool receiveRestart();
     
     void handleWinner(TicTacToe::WinCondition winner);
 
@@ -32,4 +37,6 @@ private:
     bool m_gameover;
     TextLabel m_winnerLabel;
     Button m_restartButton;
+    bool m_wantRestart;
+    TextLabel m_waitRestartLabel;
 };
