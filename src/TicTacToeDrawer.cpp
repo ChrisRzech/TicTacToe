@@ -58,11 +58,11 @@ void TicTacToeDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) co
     {
         for(int col = 0; col < TicTacToe::BOARD_SIZE; col++)
         {
-            std::optional<bool> cellValueOptional = m_TicTacToe.getMark(row, col);
+            TicTacToe::Mark cellMark = m_TicTacToe.getMark(row, col);
             
-            if(cellValueOptional.has_value())
+            if(cellMark != TicTacToe::Mark::EMPTY)
             {
-                text.setString((cellValueOptional.value() ? "X" : "O"));
+                text.setString(cellMark == TicTacToe::Mark::X ? "X" : "O");
                 
                 /* Center text in cell */
                 float textWidth = text.getLocalBounds().width;

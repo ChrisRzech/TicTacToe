@@ -1,50 +1,81 @@
 #include "GameScene.hpp"
+#include "Resources.hpp"
 #include <sfml/Network/TcpSocket.hpp>
-#include <iostream>
 
 extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
 GameScene::GameScene(sf::RenderWindow& window)
-    : Scene{window}, m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()}
+    : Scene{window},
+      m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()},
+      m_winnerLabel{Resources::getResources().font, ""},
+      m_restartButton{Resources::getResources().font, "Restart"}
 {
+    sf::Vector2u windowSize = window.getSize();
     
+    m_winnerLabel.setBackgroundSize(350, 175);
+    m_winnerLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
+    m_winnerLabel.setBorderThickness(1);
+    m_winnerLabel.setTextColor(sf::Color::White);
+    m_winnerLabel.setBackgroundColor(sf::Color::Black);
+    m_winnerLabel.setBorderColor(sf::Color::White);
+    
+    m_restartButton.setBackgroundSize(120, 40);
+    m_restartButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
+    m_restartButton.setBorderThickness(1);
+    m_restartButton.setTextColor(sf::Color::White);
+    m_restartButton.setBackgroundColor(sf::Color::Black);
+    m_restartButton.setBorderColor(sf::Color::White);
 }
 
 void GameScene::enter()
 {
-    m_turn = g_isHost;
+    m_myMark = (g_isHost ? TicTacToe::Mark::X : TicTacToe::Mark::O);
+    m_ttt.setTurn(TicTacToe::Mark::X);
     
     m_selector.add(g_socket);
+    
+    m_gameover = false;
 }
 
 void GameScene::update(const Input& input)
 {
-    if(m_turn)
+    if(m_gameover)
     {
-        if(input.isPressed(Input::Key::LeftClick))
+        if(m_restartButton.isPressed(input))
         {
-            std::pair<int, int> cell = m_tttDrawer.convertPointToCell(static_cast<sf::Vector2f>(input.mousePosition()));
+            m_ttt.clear();
             
-            if(!m_ttt.getMark(cell.first, cell.second).has_value())
-            {
-                sendMove(TicTacToeMove{cell.first, cell.second});
-                
-                m_turn = false;
-                m_ttt.setMark(cell.first, cell.second);
-                handleWinner(m_ttt.checkWin());
-            }
+            m_ttt.setTurn(TicTacToe::Mark::X);
+            m_gameover = false;
         }
     }
     else
     {
-        std::optional<TicTacToeMove> move = receiveMove();
-        
-        if(move.has_value())
+        if(m_ttt.getTurn() == m_myMark)
         {
-            m_turn = true;
-            m_ttt.setMark(move->row, move->col);
-            handleWinner(m_ttt.checkWin());
+            if(input.isPressed(Input::Key::LeftClick))
+            {
+                std::pair<int, int> cell = m_tttDrawer.convertPointToCell(static_cast<sf::Vector2f>(input.mousePosition()));
+                
+                if(m_ttt.getMark(cell.first, cell.second) == TicTacToe::Mark::EMPTY)
+                {
+                    sendMove(TicTacToeMove{cell.first, cell.second});
+                    
+                    m_ttt.setMark(cell.first, cell.second);
+                    handleWinner(m_ttt.checkWin());
+                }
+            }
+        }
+        else
+        {
+            std::optional<TicTacToeMove> move = receiveMove();
+            
+            if(move.has_value())
+            {
+                m_ttt.setMark(move->row, move->col);
+                handleWinner(m_ttt.checkWin());
+            }
         }
     }
 }
@@ -58,6 +89,11 @@ void GameScene::draw() const
 {
     m_window.clear();
     m_window.draw(m_tttDrawer);
+    if(m_gameover)
+    {
+        m_window.draw(m_winnerLabel);
+        m_window.draw(m_restartButton);
+    }
     m_window.display();
 }
 
@@ -87,21 +123,34 @@ std::optional<TicTacToeMove> GameScene::receiveMove()
     return move;
 }
 
-void GameScene::handleWinner(const std::optional<bool>& winner)
+void GameScene::handleWinner(TicTacToe::WinCondition winner)
 {
-    if(winner.has_value())
+    switch(winner)
     {
-        if(winner.value())
-        {
-            std::cout << "X" << std::endl;
-        }
-        else
-        {
-            std::cout << "O" << std::endl;
-        }
+    case TicTacToe::WinCondition::NOT_DONE:
+    {
+        break;
     }
-    else
+    
+    case TicTacToe::WinCondition::X:
     {
-        std::cout << "No winner" << std::endl;
+        m_winnerLabel.setText("X wins!");
+        m_gameover = true;
+        break;
+    }
+    
+    case TicTacToe::WinCondition::O:
+    {
+        m_winnerLabel.setText("O wins!");
+        m_gameover = true;
+        break;
+    }
+    
+    case TicTacToe::WinCondition::DRAW:
+    {
+        m_winnerLabel.setText("Draw!");
+        m_gameover = true;
+        break;
+    }
     }
 }

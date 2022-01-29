@@ -1,130 +1,167 @@
 #include "TicTacToe.hpp"
 
-bool validCell(int row, int col)
+TicTacToe::TicTacToe()
 {
-    return 0 <= row && row < TicTacToe::BOARD_SIZE &&
-           0 <= col && col < TicTacToe::BOARD_SIZE;
+    clear();
+}
+
+void TicTacToe::setTurn(Mark turn)
+{
+    m_turn = turn;
+}
+
+TicTacToe::Mark TicTacToe::getTurn() const
+{
+    return m_turn;
 }
 
 void TicTacToe::setMark(int row, int col)
 {
-    if(validCell(row, col) && !m_board[row][col].has_value())
+    if(validCell(row, col) && m_board[row][col] == Mark::EMPTY)
     {
-        m_board[row][col] = turn;
-        turn = !turn;
+        m_board[row][col] = m_turn;
+        switch(m_turn)
+        {
+        case Mark::X:
+        {
+            m_turn = Mark::O;
+            break;
+        }
+        
+        case Mark::O:
+        {
+            m_turn = Mark::X;
+            break;
+        }
+        }
     }
 }
 
-std::optional<bool> TicTacToe::getMark(int row, int col) const
+TicTacToe::Mark TicTacToe::getMark(int row, int col) const
 {
     if(validCell(row, col))
         return m_board[row][col];
     else
-        return std::nullopt;
+        return Mark::EMPTY;
 }
 
 void TicTacToe::clearMark(int row, int col)
 {
     if(validCell(row, col))
-        m_board[row][col].reset();
+        m_board[row][col] = Mark::EMPTY;
 }
 
 void TicTacToe::clear()
 {
-    for(int row = 0; row < TicTacToe::BOARD_SIZE; row++)
+    for(int row = 0; row < BOARD_SIZE; row++)
     {
-        for(int col = 0; col < TicTacToe::BOARD_SIZE; col++)
+        for(int col = 0; col < BOARD_SIZE; col++)
             clearMark(row, col);
     }
 }
 
-std::optional<bool> TicTacToe::checkWin() const
-{
+TicTacToe::WinCondition TicTacToe::checkWin() const
+{   
     auto cellCheckWin =
-    [](const std::optional<bool>& cell, std::optional<bool>& winningMark)
+    []
+    (Mark mark, WinCondition& winner)
     {
-        if(cell.has_value())
+        if(mark == Mark::EMPTY)
         {
-            if(winningMark.has_value())
-            {
-                if(cell.value() != winningMark.value())
-                {
-                    winningMark.reset();
-                    return false;
-                }
-            }
-            else
-            {
-                winningMark = cell.value();
-            }
+            winner = WinCondition::NOT_DONE;
+            return false; //No possible winner
         }
         else
         {
-            winningMark.reset();
-            
-            //No possible winner
-            return false;
+            /* Is this the first cell we check? */
+            if(winner == WinCondition::NOT_DONE)
+            {
+                winner = (mark == Mark::X ? WinCondition::X : WinCondition::O);
+            }
+            else
+            {
+                if((mark == Mark::X && winner == WinCondition::O) || (mark == Mark::O && winner == WinCondition::X))
+                {
+                    winner = WinCondition::DRAW;
+                    return false; //No possible winner
+                }
+            }
         }
         
-        //Possible winner exists
-        return true;
+        return true; //Possible winner
     };
     
+    WinCondition winner;
+    
     /* Check horizontal */
-    for(int row = 0; row < TicTacToe::BOARD_SIZE; row++)
+    for(int row = 0; row < BOARD_SIZE; row++)
     {
-        std::optional<bool> winningMark;
+        winner = WinCondition::NOT_DONE;
         
-        for(int col = 0; col < TicTacToe::BOARD_SIZE; col++)
+        for(int col = 0; col < BOARD_SIZE; col++)
         {
-            if(!cellCheckWin(m_board[row][col], winningMark))
+            if(!cellCheckWin(m_board[row][col], winner))
                 break;
         }
         
-        if(winningMark.has_value())
-            return winningMark;
+        if(winner == WinCondition::X || winner == WinCondition::O)
+            return winner;
     }
     
     /* Check vertical */
-    for(int col = 0; col < TicTacToe::BOARD_SIZE; col++)
+    for(int col = 0; col < BOARD_SIZE; col++)
     {
-        std::optional<bool> winningMark;
+        winner = WinCondition::NOT_DONE;
         
-        for(int row = 0; row < TicTacToe::BOARD_SIZE; row++)
+        for(int row = 0; row < BOARD_SIZE; row++)
         {
-            if(!cellCheckWin(m_board[row][col], winningMark))
+            if(!cellCheckWin(m_board[row][col], winner))
                 break;
         }
         
-        if(winningMark.has_value())
-            return winningMark;
+        if(winner == WinCondition::X || winner == WinCondition::O)
+            return winner;
     }
     
     /* Check downward-diagonal */
+    winner = WinCondition::NOT_DONE;
+    for(int i = 0; i < BOARD_SIZE; i++)
     {
-    std::optional<bool> winningMark;
-    for(int i = 0; i < TicTacToe::BOARD_SIZE; i++)
-    {
-        if(!cellCheckWin(m_board[i][i], winningMark))
+        if(!cellCheckWin(m_board[i][i], winner))
             break;
     }
     
-    if(winningMark.has_value())
-        return winningMark;
-    }
+    if(winner == WinCondition::X || winner == WinCondition::O)
+        return winner;
     
     /* Check upward-diagonal */
+    winner = WinCondition::NOT_DONE;
+    for(int i = 0; i < BOARD_SIZE; i++)
     {
-    std::optional<bool> winningMark;
-    for(int i = 0; i < TicTacToe::BOARD_SIZE; i++)
-    {
-        if(!cellCheckWin(m_board[TicTacToe::BOARD_SIZE - i - 1][i], winningMark))
+        if(!cellCheckWin(m_board[TicTacToe::BOARD_SIZE - i - 1][i], winner))
             break;
     }
+
+    if(winner == WinCondition::X || winner == WinCondition::O)
+        return winner;
     
-    if(winningMark.has_value())
-        return winningMark;
+    /* Check if there is an empty cell */
+    for(int row = 0; row < BOARD_SIZE; row++)
+    {
+        for(int col = 0; col < BOARD_SIZE; col++)
+        {
+            if(m_board[row][col] == Mark::EMPTY)
+                return WinCondition::NOT_DONE;
+        }
     }
     
-    return std::nullopt;
+    //No empty cell, it is a draw
+    return WinCondition::DRAW;
+}
+
+
+bool TicTacToe::validCell(int row, int col)
+{
+    return 0 <= row && row < BOARD_SIZE &&
+           0 <= col && col < BOARD_SIZE;
 }
