@@ -13,8 +13,3 @@ bool Button::isPressed(const Input& input) const
     return input.isPressed(Input::Key::LeftClick) &&
            globalBounds.contains(static_cast<sf::Vector2f>(input.mousePosition()));
 }
-
-void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    TextLabel::draw(target, states);
-}
