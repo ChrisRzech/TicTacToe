@@ -13,15 +13,15 @@ GameScene::GameScene(sf::RenderWindow& window)
 {
     sf::Vector2u windowSize = window.getSize();
     
-    m_winnerLabel.setBackgroundSize(350, 175);
-    m_winnerLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
+    m_winnerLabel.setBackgroundSize(300, 175);
+    m_winnerLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
     m_winnerLabel.setBorderThickness(3);
     m_winnerLabel.setTextColor(sf::Color::White);
     m_winnerLabel.setBackgroundColor(sf::Color::Black);
     m_winnerLabel.setBorderColor(sf::Color::White);
     
     m_restartButton.setBackgroundSize(120, 40);
-    m_restartButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
+    m_restartButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
     m_restartButton.setBorderThickness(1);
     m_restartButton.setTextColor(sf::Color::White);
     m_restartButton.setBackgroundColor(sf::Color::Black);
