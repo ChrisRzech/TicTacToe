@@ -15,7 +15,7 @@ GameScene::GameScene(sf::RenderWindow& window)
     
     m_winnerLabel.setBackgroundSize(350, 175);
     m_winnerLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
-    m_winnerLabel.setBorderThickness(1);
+    m_winnerLabel.setBorderThickness(3);
     m_winnerLabel.setTextColor(sf::Color::White);
     m_winnerLabel.setBackgroundColor(sf::Color::Black);
     m_winnerLabel.setBorderColor(sf::Color::White);
@@ -129,28 +129,47 @@ void GameScene::handleWinner(TicTacToe::WinCondition winner)
     {
     case TicTacToe::WinCondition::NOT_DONE:
     {
+        return; //Do nothing in this function
         break;
     }
     
     case TicTacToe::WinCondition::X:
     {
-        m_winnerLabel.setText("X wins!");
-        m_gameover = true;
+        if(m_myMark == TicTacToe::Mark::X)
+        {
+            m_winnerLabel.setText("You win!");
+            m_winnerLabel.setBorderColor(sf::Color::Green);
+        }
+        else
+        {
+            m_winnerLabel.setText("You lose!");
+            m_winnerLabel.setBorderColor(sf::Color::Red);
+        }
         break;
     }
     
     case TicTacToe::WinCondition::O:
     {
-        m_winnerLabel.setText("O wins!");
-        m_gameover = true;
+        if(m_myMark == TicTacToe::Mark::O)
+        {
+            m_winnerLabel.setText("You win!");
+            m_winnerLabel.setBorderColor(sf::Color::Green);
+        }
+        else
+        {
+            m_winnerLabel.setText("You lose!");
+            m_winnerLabel.setBorderColor(sf::Color::Red);
+        }
         break;
     }
     
     case TicTacToe::WinCondition::DRAW:
     {
         m_winnerLabel.setText("Draw!");
-        m_gameover = true;
+        m_winnerLabel.setBorderColor(sf::Color::White);
         break;
     }
     }
+    
+    m_gameover = true;
 }
