@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics/Font.hpp>
+#include <sfml/Graphics/Font.hpp>
 
 class Resources
 {
