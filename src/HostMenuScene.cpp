@@ -56,8 +56,6 @@ void HostMenuScene::exit()
 
 void HostMenuScene::draw() const
 {
-    m_window.clear();
     m_window.draw(m_waitLabel);
     m_window.draw(m_backButton);
-    m_window.display();
 }

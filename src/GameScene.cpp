@@ -91,7 +91,6 @@ void GameScene::exit()
 
 void GameScene::draw() const
 {
-    m_window.clear();
     m_window.draw(m_tttDrawer);
     if(m_gameover)
     {
@@ -102,7 +101,6 @@ void GameScene::draw() const
         else
             m_window.draw(m_restartButton);
     }
-    m_window.display();
 }
 
 void GameScene::restart()

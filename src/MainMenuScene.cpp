@@ -53,9 +53,7 @@ void MainMenuScene::exit()
 
 void MainMenuScene::draw() const
 {
-    m_window.clear();
     m_window.draw(m_titleLabel);
     m_window.draw(m_hostButton);
     m_window.draw(m_joinButton);
-    m_window.display();
 }

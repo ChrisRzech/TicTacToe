@@ -87,10 +87,8 @@ void JoinMenuScene::exit()
 
 void JoinMenuScene::draw() const
 {
-    m_window.clear();
     m_window.draw(m_label);
     m_window.draw(m_addressField);
     m_window.draw(m_connectButton);
     m_window.draw(m_backButton);
-    m_window.display();
 }

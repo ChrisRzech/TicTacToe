@@ -78,6 +78,9 @@ int main()
             input.poll();
         
         SceneManager::getScene()->update(input);
+        
+        window.clear();
         SceneManager::getScene()->draw();
+        window.display();
     }
 }
