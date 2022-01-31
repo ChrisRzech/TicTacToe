@@ -8,9 +8,9 @@ extern bool g_isHost;
 GameScene::GameScene(sf::RenderWindow& window)
     : Scene{window},
       m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()},
-      m_winnerLabel{Resources::getResources().font, ""},
-      m_restartButton{Resources::getResources().font, "Restart"},
-      m_waitRestartLabel{Resources::getResources().font, "Waiting for opponent..."}
+      m_winnerLabel{Resources::get().font, ""},
+      m_restartButton{Resources::get().font, "Restart"},
+      m_waitRestartLabel{Resources::get().font, "Waiting for opponent..."}
 {
     sf::Vector2u windowSize = window.getSize();
     

@@ -3,7 +3,7 @@
 
 Resources* Resources::instance;
 
-Resources& Resources::getResources()
+Resources& Resources::get()
 {
     if(instance == nullptr)
         instance = new Resources();

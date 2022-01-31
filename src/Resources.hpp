@@ -4,7 +4,7 @@
 class Resources
 {
 public:
-    static Resources& getResources();
+    static Resources& get();
     
     sf::Font font;
     

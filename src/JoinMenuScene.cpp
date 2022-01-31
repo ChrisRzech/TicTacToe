@@ -9,9 +9,9 @@ extern bool g_isHost;
 
 JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
     : Scene{window},
-      m_label{Resources::getResources().font, "Enter address"},
-      m_connectButton{Resources::getResources().font, "Connect"},
-      m_backButton{Resources::getResources().font, "Back"}
+      m_label{Resources::get().font, "Enter address"},
+      m_connectButton{Resources::get().font, "Connect"},
+      m_backButton{Resources::get().font, "Back"}
 {
     sf::Vector2u windowSize = window.getSize();
     

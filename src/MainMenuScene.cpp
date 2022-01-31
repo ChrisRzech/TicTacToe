@@ -4,9 +4,9 @@
 
 MainMenuScene::MainMenuScene(sf::RenderWindow& window)
     : Scene{window},
-      m_titleLabel{Resources::getResources().font, "Tic-Tac-Toe"},
-      m_hostButton{Resources::getResources().font, "Host"},
-      m_joinButton{Resources::getResources().font, "Join"}
+      m_titleLabel{Resources::get().font, "Tic-Tac-Toe"},
+      m_hostButton{Resources::get().font, "Host"},
+      m_joinButton{Resources::get().font, "Join"}
 {
     sf::Vector2u windowSize = window.getSize();
     

@@ -52,7 +52,7 @@ void TicTacToeDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) co
     
     /* Draw symbols */
     sf::Text text;
-    text.setFont(Resources::getResources().font);
+    text.setFont(Resources::get().font);
     text.setCharacterSize(75);
     for(int row = 0; row < TicTacToe::BOARD_SIZE; row++)
     {

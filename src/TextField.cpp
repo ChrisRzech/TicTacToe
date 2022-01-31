@@ -13,7 +13,7 @@ TextField::TextField()
 TextField::TextField(const sf::Vector2f& position, const sf::Vector2f& size, int maxCharacters)
     : m_cursor{sf::Lines, 2}
 {
-    m_text.setFont(Resources::getResources().font);
+    m_text.setFont(Resources::get().font);
     
     m_box.setFillColor(sf::Color::Transparent);
     m_box.setOutlineColor(sf::Color::White);

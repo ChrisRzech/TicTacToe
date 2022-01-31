@@ -9,8 +9,8 @@ extern bool g_isHost;
 
 HostMenuScene::HostMenuScene(sf::RenderWindow& window)
     : Scene{window},
-      m_waitLabel{Resources::getResources().font, "Waiting for opponent..."},
-      m_backButton{Resources::getResources().font, "Back"}
+      m_waitLabel{Resources::get().font, "Waiting for opponent..."},
+      m_backButton{Resources::get().font, "Back"}
 {
     sf::Vector2u windowSize = window.getSize();
 
