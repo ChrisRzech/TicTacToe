@@ -11,8 +11,8 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
 
 # Automatic prerequisites
-REQ = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.d)
-REQ = -MMD -MF $(@:.o=.d)
+DEPS = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.d)
+DEPFLAGS = -MMD -MF $(@:.o=.d)
 
 # SFML library (edit paths as necessary)
 SFML_DIR = C:/SFML-2.5.1
