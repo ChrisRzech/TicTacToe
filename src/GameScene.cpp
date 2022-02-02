@@ -10,7 +10,10 @@ GameScene::GameScene(sf::RenderWindow& window)
       m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()},
       m_winnerLabel{Resources::get().font, ""},
       m_restartButton{Resources::get().font, "Restart"},
-      m_waitRestartLabel{Resources::get().font, "Waiting for opponent..."}
+      m_waitRestartLabel{Resources::get().font, "Waiting for opponent..."},
+      m_turnSelectLabel{Resources::get().font, ""},
+      m_selectFirstButton{Resources::get().font, "First"},
+      m_selectSecondButton{Resources::get().font, "Second"}
 {
     sf::Vector2u windowSize = window.getSize();
     
@@ -31,12 +34,32 @@ GameScene::GameScene(sf::RenderWindow& window)
     m_waitRestartLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
     m_waitRestartLabel.setTextColor(sf::Color::White);
     m_waitRestartLabel.setBackgroundColor(sf::Color::Black);
+    
+    m_turnSelectLabel.setBackgroundSize(300, 175);
+    m_turnSelectLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    m_turnSelectLabel.setBorderThickness(3);
+    m_turnSelectLabel.setTextColor(sf::Color::White);
+    m_turnSelectLabel.setBackgroundColor(sf::Color::Black);
+    m_turnSelectLabel.setBorderColor(sf::Color::White);
+    
+    m_selectFirstButton.setBackgroundSize(110, 40);
+    m_selectFirstButton.setPositionCenter(windowSize.x * 0.38, windowSize.y * 0.6);
+    m_selectFirstButton.setBorderThickness(1);
+    m_selectFirstButton.setTextColor(sf::Color::White);
+    m_selectFirstButton.setBackgroundColor(sf::Color::Black);
+    m_selectFirstButton.setBorderColor(sf::Color::White);
+    
+    m_selectSecondButton.setBackgroundSize(110, 40);
+    m_selectSecondButton.setPositionCenter(windowSize.x * 0.62, windowSize.y * 0.6);
+    m_selectSecondButton.setBorderThickness(1);
+    m_selectSecondButton.setTextColor(sf::Color::White);
+    m_selectSecondButton.setBackgroundColor(sf::Color::Black);
+    m_selectSecondButton.setBorderColor(sf::Color::White);
 }
 
 void GameScene::enter()
 {
     m_selector.add(g_socket);
-    m_myMark = (g_isHost ? TicTacToe::Mark::X : TicTacToe::Mark::O);
     restart();
 }
 
@@ -52,6 +75,33 @@ void GameScene::update(const Input& input)
         {
             m_wantRestart = true;
             sendRestart();
+        }
+    }
+    else if(m_selectingTurn)
+    {
+        if(g_isHost)
+        {
+            if(m_selectFirstButton.isPressed(input))
+            {
+                m_myMark = TicTacToe::Mark::X;
+                sendStartTurn(TicTacToe::Mark::O);
+                m_selectingTurn = false;
+            }
+            else if(m_selectSecondButton.isPressed(input))
+            {
+                m_myMark = TicTacToe::Mark::O;
+                sendStartTurn(TicTacToe::Mark::X);
+                m_selectingTurn = false;
+            }
+        }
+        else
+        {
+            std::optional<TicTacToe::Mark> receivedMark = receiveStartTurn();
+            if(receivedMark.has_value())
+            {
+                m_myMark = receivedMark.value();
+                m_selectingTurn = false;
+            }
         }
     }
     else
@@ -92,6 +142,7 @@ void GameScene::exit()
 void GameScene::draw() const
 {
     m_window.draw(m_tttDrawer);
+    
     if(m_gameover)
     {
         m_window.draw(m_winnerLabel);
@@ -100,6 +151,16 @@ void GameScene::draw() const
             m_window.draw(m_waitRestartLabel);
         else
             m_window.draw(m_restartButton);
+    }
+    else if(m_selectingTurn)
+    {
+        m_window.draw(m_turnSelectLabel);
+        
+        if(g_isHost)
+        {
+            m_window.draw(m_selectFirstButton);
+            m_window.draw(m_selectSecondButton);
+        }
     }
 }
 
@@ -110,6 +171,9 @@ void GameScene::restart()
     m_ttt.setTurn(TicTacToe::Mark::X);
     m_gameover = false;
     m_wantRestart = false;
+    m_selectingTurn = true;
+    
+    m_turnSelectLabel.setText(g_isHost ? "Go first or second?" : "Host selecting turn...");
 }
 
 void GameScene::sendMove(const TicTacToeMove& move)
@@ -162,6 +226,33 @@ bool GameScene::receiveRestart()
     }
     
     return restart;
+}
+
+void GameScene::sendStartTurn(TicTacToe::Mark mark)
+{
+    sf::Int8 x = static_cast<sf::Int8>(mark);
+    sf::Packet packet;
+    packet << x;
+    g_socket.send(packet);
+}
+
+std::optional<TicTacToe::Mark> GameScene::receiveStartTurn()
+{
+    std::optional<TicTacToe::Mark> mark;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        if(status == sf::Socket::Status::Done)
+        {
+            sf::Int8 receivedMark;
+            packet >> receivedMark;
+            mark = static_cast<TicTacToe::Mark>(receivedMark);
+        }
+    }
+    
+    return mark;
 }
 
 void GameScene::handleWinner(TicTacToe::WinCondition winner)

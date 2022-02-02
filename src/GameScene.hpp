@@ -26,6 +26,9 @@ private:
     void sendRestart();
     bool receiveRestart();
     
+    void sendStartTurn(TicTacToe::Mark);
+    std::optional<TicTacToe::Mark> receiveStartTurn();
+    
     void handleWinner(TicTacToe::WinCondition winner);
 
     TicTacToe m_ttt;
@@ -39,4 +42,9 @@ private:
     Button m_restartButton;
     bool m_wantRestart;
     TextLabel m_waitRestartLabel;
+    
+    bool m_selectingTurn;
+    TextLabel m_turnSelectLabel;
+    Button m_selectFirstButton;
+    Button m_selectSecondButton;
 };
