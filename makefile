@@ -11,16 +11,16 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
 
 # Automatic prerequisites
-DEPS = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.d)
-DEPFLAGS = -MMD -MF $(@:.o=.d)
+REQS = $(SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.d)
+REQFLAGS = -MMD
 
 # SFML library (edit paths as necessary)
 SFML_DIR = C:/SFML-2.5.1
-SFML_BIN = $(SFML_DIR)/bin
-SFML_LIB = -L$(SFML_DIR)/lib
-SFML_INCLUDE = -I$(SFML_DIR)/include
-SFML_LIBRARIES = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network
-SFML_FLAGS = $(SFML_LIB) $(SFML_INCLUDE) $(SFML_LIBRARIES)
+SFML_BIN_DIR = $(SFML_DIR)/bin
+SFML_INC_DIR = $(SFML_DIR)/include
+SFML_LIB_DIR = $(SFML_DIR)/lib
+SFML_LIBS = sfml-graphics sfml-window sfml-system sfml-network
+SFML_FLAGS = -I$(SFML_INC_DIR) -L$(SFML_LIB_DIR) $(SFML_LIBS:%=-l%)
 
 # Compiler
 CXX = g++
@@ -35,10 +35,10 @@ CXXFLAGS = -W -std=c++17
 setup_bin:
 	$(info Setting up bin directory...)
 	@mkdir -p $(BIN_DIR)
-	@cp $(SFML_BIN)/sfml-graphics-2.dll $(BIN_DIR)/
-	@cp $(SFML_BIN)/sfml-window-2.dll $(BIN_DIR)/
-	@cp $(SFML_BIN)/sfml-system-2.dll $(BIN_DIR)/
-	@cp $(SFML_BIN)/sfml-network-2.dll $(BIN_DIR)/
+	@cp $(SFML_BIN_DIR)/sfml-graphics-2.dll $(BIN_DIR)/
+	@cp $(SFML_BIN_DIR)/sfml-window-2.dll $(BIN_DIR)/
+	@cp $(SFML_BIN_DIR)/sfml-system-2.dll $(BIN_DIR)/
+	@cp $(SFML_BIN_DIR)/sfml-network-2.dll $(BIN_DIR)/
 	@cp -r $(RES_DIR)/ $(BIN_DIR)/
 	$(info Done.)
 
@@ -52,8 +52,8 @@ clean:
 	rm -r $(BIN_DIR)
 
 $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp | setup_bin
-	$(CXX) -c $(CXXFLAGS) $(DEPFLAGS) -o $@ $< $(SFML_FLAGS)
+	$(CXX) -c $(CXXFLAGS) $(REQFLAGS) -o $@ $< $(SFML_FLAGS)
 
-.PHONY: build setup_bin run clean
+.PHONY: setup_bin build run clean
 
--include $(DEPS)
+-include $(REQS)
