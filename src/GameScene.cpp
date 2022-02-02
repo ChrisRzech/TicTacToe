@@ -1,6 +1,7 @@
 #include "GameScene.hpp"
 #include "Resources.hpp"
 #include <sfml/Network/TcpSocket.hpp>
+#include <sfml/Network/Packet.hpp>
 
 extern sf::TcpSocket g_socket;
 extern bool g_isHost;
@@ -110,24 +111,23 @@ void GameScene::update(const Input& input)
         {
             if(input.isPressed(Input::Key::LeftClick))
             {
-                std::pair<int, int> cell = m_tttDrawer.convertPointToCell(static_cast<sf::Vector2f>(input.mousePosition()));
+                std::pair<int, int> move = m_tttDrawer.convertPointToCell(static_cast<sf::Vector2f>(input.mousePosition()));
                 
-                if(m_ttt.getMark(cell.first, cell.second) == TicTacToe::Mark::EMPTY)
+                if(m_ttt.getMark(move.first, move.second) == TicTacToe::Mark::EMPTY)
                 {
-                    sendMove(TicTacToeMove{cell.first, cell.second});
+                    sendMove(move);
                     
-                    m_ttt.setMark(cell.first, cell.second);
+                    m_ttt.setMark(move.first, move.second);
                     handleWinner(m_ttt.checkWin());
                 }
             }
         }
         else
         {
-            std::optional<TicTacToeMove> move = receiveMove();
-            
+            std::optional<std::pair<int, int>> move = receiveMove();
             if(move.has_value())
             {
-                m_ttt.setMark(move->row, move->col);
+                m_ttt.setMark(move->first, move->second);
                 handleWinner(m_ttt.checkWin());
             }
         }
@@ -174,85 +174,6 @@ void GameScene::restart()
     m_selectingTurn = true;
     
     m_turnSelectLabel.setText(g_isHost ? "Go first or second?" : "Host selecting turn...");
-}
-
-void GameScene::sendMove(const TicTacToeMove& move)
-{
-    sf::Packet packet;
-    packet << move;
-    g_socket.send(packet);
-}
-
-std::optional<TicTacToeMove> GameScene::receiveMove()
-{
-    std::optional<TicTacToeMove> move;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
-        {
-            TicTacToeMove receivedMove;
-            packet >> receivedMove;
-            move = receivedMove;
-        }
-    }
-    
-    return move;
-}
-
-void GameScene::sendRestart()
-{
-    sf::Int8 x = 0; //Don't care what is sent, just let them know to restart
-    sf::Packet packet;
-    packet << x;
-    g_socket.send(packet);
-}
-
-bool GameScene::receiveRestart()
-{
-    bool restart = false;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
-        {
-            //Don't care what is received, just wanted to know if they want to restart
-            restart = true;
-        }
-    }
-    
-    return restart;
-}
-
-void GameScene::sendStartTurn(TicTacToe::Mark mark)
-{
-    sf::Int8 x = static_cast<sf::Int8>(mark);
-    sf::Packet packet;
-    packet << x;
-    g_socket.send(packet);
-}
-
-std::optional<TicTacToe::Mark> GameScene::receiveStartTurn()
-{
-    std::optional<TicTacToe::Mark> mark;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
-        {
-            sf::Int8 receivedMark;
-            packet >> receivedMark;
-            mark = static_cast<TicTacToe::Mark>(receivedMark);
-        }
-    }
-    
-    return mark;
 }
 
 void GameScene::handleWinner(TicTacToe::WinCondition winner)
@@ -304,4 +225,79 @@ void GameScene::handleWinner(TicTacToe::WinCondition winner)
     }
     
     m_gameover = true;
+}
+
+void GameScene::sendMove(const std::pair<int, int>& move)
+{
+    sf::Packet packet;
+    packet << static_cast<sf::Int8>(move.first) << static_cast<sf::Int8>(move.second);
+    g_socket.send(packet);
+}
+
+std::optional<std::pair<int, int>> GameScene::receiveMove()
+{
+    std::optional<std::pair<int, int>> move;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        if(status == sf::Socket::Status::Done)
+        {
+            sf::Int8 receivedFirst;
+            sf::Int8 receivedSecond;
+            packet >> receivedFirst >> receivedSecond;
+            move = std::make_pair(static_cast<int>(receivedFirst), static_cast<int>(receivedSecond));
+        }
+    }
+    
+    return move;
+}
+
+void GameScene::sendRestart()
+{
+    sf::Packet packet;
+    packet << static_cast<sf::Int8>(0); //Don't care what is sent, just let them know to restart
+    g_socket.send(packet);
+}
+
+bool GameScene::receiveRestart()
+{
+    bool restart = false;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        if(status == sf::Socket::Status::Done)
+            restart = true; //Don't care what is received, just wanted to know if they want to restart
+    }
+    
+    return restart;
+}
+
+void GameScene::sendStartTurn(TicTacToe::Mark mark)
+{
+    sf::Packet packet;
+    packet << static_cast<sf::Int8>(mark);
+    g_socket.send(packet);
+}
+
+std::optional<TicTacToe::Mark> GameScene::receiveStartTurn()
+{
+    std::optional<TicTacToe::Mark> mark;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        if(status == sf::Socket::Status::Done)
+        {
+            sf::Int8 receivedMark;
+            packet >> receivedMark;
+            mark = static_cast<TicTacToe::Mark>(receivedMark);
+        }
+    }
+    
+    return mark;
 }

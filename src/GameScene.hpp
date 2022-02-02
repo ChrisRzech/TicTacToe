@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene.hpp"
 #include "TicTacToeDrawer.hpp"
-#include "Packets.hpp"
 #include "Button.hpp"
 #include "TextLabel.hpp"
 #include <sfml/Network/SocketSelector.hpp>
@@ -19,17 +18,16 @@ public:
 
 private:
     void restart();
+    void handleWinner(TicTacToe::WinCondition winner);
     
-    void sendMove(const TicTacToeMove& move);
-    std::optional<TicTacToeMove> receiveMove();
+    void sendMove(const std::pair<int, int>& move);
+    std::optional<std::pair<int, int>> receiveMove();
     
     void sendRestart();
     bool receiveRestart();
     
     void sendStartTurn(TicTacToe::Mark);
     std::optional<TicTacToe::Mark> receiveStartTurn();
-    
-    void handleWinner(TicTacToe::WinCondition winner);
 
     TicTacToe m_ttt;
     TicTacToeDrawer m_tttDrawer;
