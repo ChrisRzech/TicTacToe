@@ -87,10 +87,10 @@ void GameScene::update(const Input& input)
         }
         else
         {
-            std::optional<TicTacToe::Mark> receivedMark = receiveStartTurn();
-            if(receivedMark.has_value())
+            std::optional<TicTacToe::Mark> myMark = receiveStartTurn();
+            if(myMark.has_value())
             {
-                m_myMark = receivedMark.value();
+                m_myMark = myMark.value();
                 m_state = State::PLAY;
             }
         }
