@@ -21,4 +21,7 @@ Resources::Resources()
 {
     if(!font.loadFromFile("res/Roboto-Thin.ttf"))
         fatalp("\"res/Roboto-Thin.ttf\" failed to load, aborting!");
+    
+    if(!windowIcon.loadFromFile("res/window_icon.png"))
+        fatalp("\"res/window_icon.png\" failed to load, aborting!");
 }

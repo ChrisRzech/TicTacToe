@@ -7,6 +7,7 @@ public:
     static Resources& get();
     
     sf::Font font;
+    sf::Image windowIcon;
     
 private:
     Resources();

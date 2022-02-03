@@ -4,6 +4,7 @@
 #include "HostMenuScene.hpp"
 #include "JoinMenuScene.hpp"
 #include "SceneManager.hpp"
+#include "Resources.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Window/Event.hpp>
 
@@ -15,6 +16,8 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode{600, 600}, "Tic-Tac-Toe", sf::Style::Close);
     window.setFramerateLimit(60);
+    const sf::Image& windowIcon = Resources::get().windowIcon;
+    window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
     
     const std::vector<Input::Key> polledInputs =
     {
