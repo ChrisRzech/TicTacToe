@@ -17,6 +17,9 @@ public:
     void draw() const override;
 
 private:
+    enum class State { TURN_SELECT, PLAY, GAMEOVER };
+    State m_state;
+    
     void restart();
     void handleWinner(TicTacToe::WinCondition winner);
     
@@ -35,13 +38,11 @@ private:
     
     sf::SocketSelector m_selector;
     
-    bool m_gameover;
     TextLabel m_winnerLabel;
     Button m_restartButton;
     bool m_wantRestart;
     TextLabel m_waitRestartLabel;
     
-    bool m_selectingTurn;
     TextLabel m_turnSelectLabel;
     Button m_selectFirstButton;
     Button m_selectSecondButton;

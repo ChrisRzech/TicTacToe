@@ -66,19 +66,9 @@ void GameScene::enter()
 
 void GameScene::update(const Input& input)
 {
-    if(m_gameover)
+    switch(m_state)
     {
-        if(m_wantRestart && receiveRestart())
-        {
-            restart();
-        }
-        else if(m_restartButton.isPressed(input))
-        {
-            m_wantRestart = true;
-            sendRestart();
-        }
-    }
-    else if(m_selectingTurn)
+    case State::TURN_SELECT:
     {
         if(g_isHost)
         {
@@ -86,13 +76,13 @@ void GameScene::update(const Input& input)
             {
                 m_myMark = TicTacToe::Mark::X;
                 sendStartTurn(TicTacToe::Mark::O);
-                m_selectingTurn = false;
+                m_state = State::PLAY;
             }
             else if(m_selectSecondButton.isPressed(input))
             {
                 m_myMark = TicTacToe::Mark::O;
                 sendStartTurn(TicTacToe::Mark::X);
-                m_selectingTurn = false;
+                m_state = State::PLAY;
             }
         }
         else
@@ -101,11 +91,14 @@ void GameScene::update(const Input& input)
             if(receivedMark.has_value())
             {
                 m_myMark = receivedMark.value();
-                m_selectingTurn = false;
+                m_state = State::PLAY;
             }
         }
+        
+        break;
     }
-    else
+    
+    case State::PLAY:
     {
         if(m_ttt.getTurn() == m_myMark)
         {
@@ -131,6 +124,24 @@ void GameScene::update(const Input& input)
                 handleWinner(m_ttt.checkWin());
             }
         }
+        
+        break;
+    }
+    
+    case State::GAMEOVER:
+    {
+        if(m_wantRestart && receiveRestart())
+        {
+            restart();
+        }
+        else if(m_restartButton.isPressed(input))
+        {
+            m_wantRestart = true;
+            sendRestart();
+        }
+        
+        break;
+    }
     }
 }
 
@@ -143,16 +154,9 @@ void GameScene::draw() const
 {
     m_window.draw(m_tttDrawer);
     
-    if(m_gameover)
+    switch(m_state)
     {
-        m_window.draw(m_winnerLabel);
-        
-        if(m_wantRestart)
-            m_window.draw(m_waitRestartLabel);
-        else
-            m_window.draw(m_restartButton);
-    }
-    else if(m_selectingTurn)
+    case State::TURN_SELECT:
     {
         m_window.draw(m_turnSelectLabel);
         
@@ -161,19 +165,37 @@ void GameScene::draw() const
             m_window.draw(m_selectFirstButton);
             m_window.draw(m_selectSecondButton);
         }
+        
+        break;
+    }
+    
+    case State::PLAY:
+    {
+        break;
+    }
+    
+    case State::GAMEOVER:
+    {
+        m_window.draw(m_winnerLabel);
+        
+        if(m_wantRestart)
+            m_window.draw(m_waitRestartLabel);
+        else
+            m_window.draw(m_restartButton);
+        
+        break;
+    }
     }
 }
 
 void GameScene::restart()
 {
-    m_ttt.clear();
-    
-    m_ttt.setTurn(TicTacToe::Mark::X);
-    m_gameover = false;
+    m_state = State::TURN_SELECT;
     m_wantRestart = false;
-    m_selectingTurn = true;
-    
     m_turnSelectLabel.setText(g_isHost ? "Go first or second?" : "Host selecting turn...");
+    
+    m_ttt.clear();
+    m_ttt.setTurn(TicTacToe::Mark::X);
 }
 
 void GameScene::handleWinner(TicTacToe::WinCondition winner)
@@ -224,7 +246,7 @@ void GameScene::handleWinner(TicTacToe::WinCondition winner)
     }
     }
     
-    m_gameover = true;
+    m_state = State::GAMEOVER;
 }
 
 void GameScene::sendMove(const std::pair<int, int>& move)
