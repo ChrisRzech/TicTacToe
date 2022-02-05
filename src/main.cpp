@@ -20,35 +20,7 @@ int main()
     const sf::Image& windowIcon = Resources::get().windowIcon;
     window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
     
-    const std::vector<Input::Key> polledInputs =
-    {
-        Input::Key::LeftClick,
-        Input::Key::Enter,
-        
-        Input::Key::Num0,
-        Input::Key::Num1,
-        Input::Key::Num2,
-        Input::Key::Num3,
-        Input::Key::Num4,
-        Input::Key::Num5,
-        Input::Key::Num6,
-        Input::Key::Num7,
-        Input::Key::Num8,
-        Input::Key::Num9,
-        Input::Key::Period,
-        Input::Key::Backspace,
-        Input::Key::Left,
-        Input::Key::Right,
-        
-        Input::Key::L,
-        Input::Key::O,
-        Input::Key::C,
-        Input::Key::A,
-        Input::Key::H,
-        Input::Key::S,
-        Input::Key::T
-    };
-    Input input(window, 10, polledInputs);
+    Input input(window, 10);
     
     SceneManager::addScene("MainMenu", new MainMenuScene(window.getSize()));
     SceneManager::addScene("HostMenu", new HostMenuScene(window.getSize()));

@@ -46,6 +46,7 @@ public:
     static constexpr int MIN_HOLD_THRESHOLD = 2;
 
     /* Constructors */
+    Input(const sf::Window&, int holdThreshold);
     Input(const sf::Window&, int holdThreshold, const std::vector<Key>& keysToPoll);
     
     /* Getters */

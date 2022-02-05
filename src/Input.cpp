@@ -2,6 +2,21 @@
 #include <sfml/Window/Keyboard.hpp>
 #include <sfml/Window/Mouse.hpp>
 
+Input::Input(const sf::Window& window, int holdThreshold)
+    : m_window{window}
+{
+    /* Poll all the keys */
+    for(Key key = Key::A; key < Key::TotalKeyCount; key = static_cast<Key>(static_cast<int>(key) + 1))
+    {
+        if(key != Key::KeyboardKeyCount)
+            m_keysToPoll.push_back(key);
+    }
+    
+    setHoldThreshold(holdThreshold);
+    
+    m_keyInfo.resize(static_cast<int>(TotalKeyCount));
+}
+
 Input::Input(const sf::Window& window, int holdThreshold, const std::vector<Key>& keysToPoll)
     : m_window{window}, m_keysToPoll{keysToPoll}
 {
