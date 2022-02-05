@@ -7,17 +7,15 @@ extern unsigned short g_port;
 extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
-HostMenuScene::HostMenuScene(sf::RenderWindow& window)
-    : Scene{window},
+HostMenuScene::HostMenuScene(const sf::Vector2u& size)
+    : Scene{size},
       m_waitLabel{Resources::get().font, "Waiting for opponent..."},
       m_backButton{Resources::get().font, "Back"}
 {
-    sf::Vector2u windowSize = window.getSize();
-
-    m_waitLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
+    m_waitLabel.setPositionCenter(size.x * 0.5, size.y * 0.45);
     
     m_backButton.setBackgroundSize(80, 40);
-    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
+    m_backButton.setPositionCenter(size.x * 0.5, size.y * 0.55);
     m_backButton.setBorderThickness(1);
     m_backButton.setTextColor(sf::Color::White);
     m_backButton.setBackgroundColor(sf::Color::Transparent);
@@ -54,8 +52,8 @@ void HostMenuScene::exit()
     m_selector.clear();
 }
 
-void HostMenuScene::draw() const
+void HostMenuScene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    m_window.draw(m_waitLabel);
-    m_window.draw(m_backButton);
+    target.draw(m_waitLabel, states);
+    target.draw(m_backButton, states);
 }

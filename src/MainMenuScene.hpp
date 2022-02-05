@@ -6,13 +6,13 @@
 class MainMenuScene : public Scene
 {
 public:
-    MainMenuScene(sf::RenderWindow&);
+    MainMenuScene(const sf::Vector2u& size);
     
     void enter() override;
     void update(const Input&) override;
     void exit() override;
     
-    void draw() const override;
+    void draw(sf::RenderTarget&, sf::RenderStates) const override;
     
 private:
     TextLabel m_titleLabel;

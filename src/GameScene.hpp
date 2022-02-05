@@ -8,13 +8,13 @@
 class GameScene : public Scene
 {
 public:
-    GameScene(sf::RenderWindow&);
+    GameScene(const sf::Vector2u& size);
     
     void enter() override;
     void update(const Input&) override;
     void exit() override;
     
-    void draw() const override;
+    void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 private:
     enum class State { TURN_SELECT, PLAY, GAMEOVER };

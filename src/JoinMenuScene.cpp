@@ -7,28 +7,26 @@ extern unsigned short g_port;
 extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
-JoinMenuScene::JoinMenuScene(sf::RenderWindow& window)
-    : Scene{window},
+JoinMenuScene::JoinMenuScene(const sf::Vector2u& size)
+    : Scene{size},
       m_label{Resources::get().font, "Enter address"},
       m_connectButton{Resources::get().font, "Connect"},
       m_backButton{Resources::get().font, "Back"}
 {
-    sf::Vector2u windowSize = window.getSize();
-    
-    m_label.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.35);
+    m_label.setPositionCenter(size.x * 0.5, size.y * 0.35);
     
     m_addressField.setSize(300, 35);
-    m_addressField.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.45);
+    m_addressField.setPositionCenter(size.x * 0.5, size.y * 0.45);
     
     m_connectButton.setBackgroundSize(120, 40);
-    m_connectButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.55);
+    m_connectButton.setPositionCenter(size.x * 0.5, size.y * 0.55);
     m_connectButton.setBorderThickness(1);
     m_connectButton.setTextColor(sf::Color::White);
     m_connectButton.setBackgroundColor(sf::Color::Transparent);
     m_connectButton.setBorderColor(sf::Color::White);
     
     m_backButton.setBackgroundSize(80, 40);
-    m_backButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.65);
+    m_backButton.setPositionCenter(size.x * 0.5, size.y * 0.65);
     m_backButton.setBorderThickness(1);
     m_backButton.setTextColor(sf::Color::White);
     m_backButton.setBackgroundColor(sf::Color::Transparent);
@@ -85,10 +83,10 @@ void JoinMenuScene::exit()
     
 }
 
-void JoinMenuScene::draw() const
+void JoinMenuScene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    m_window.draw(m_label);
-    m_window.draw(m_addressField);
-    m_window.draw(m_connectButton);
-    m_window.draw(m_backButton);
+    target.draw(m_label, states);
+    target.draw(m_addressField, states);
+    target.draw(m_connectButton, states);
+    target.draw(m_backButton, states);
 }

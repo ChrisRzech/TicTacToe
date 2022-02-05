@@ -6,9 +6,9 @@
 extern sf::TcpSocket g_socket;
 extern bool g_isHost;
 
-GameScene::GameScene(sf::RenderWindow& window)
-    : Scene{window},
-      m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, window.getSize()},
+GameScene::GameScene(const sf::Vector2u& size)
+    : Scene{size},
+      m_tttDrawer{m_ttt, sf::Vector2f{0, 0}, size},
       m_winnerLabel{Resources::get().font, ""},
       m_restartButton{Resources::get().font, "Restart"},
       m_waitRestartLabel{Resources::get().font, "Waiting for opponent..."},
@@ -16,42 +16,40 @@ GameScene::GameScene(sf::RenderWindow& window)
       m_selectFirstButton{Resources::get().font, "First"},
       m_selectSecondButton{Resources::get().font, "Second"}
 {
-    sf::Vector2u windowSize = window.getSize();
-    
     m_winnerLabel.setBackgroundSize(300, 175);
-    m_winnerLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    m_winnerLabel.setPositionCenter(size.x * 0.5, size.y * 0.5);
     m_winnerLabel.setBorderThickness(3);
     m_winnerLabel.setTextColor(sf::Color::White);
     m_winnerLabel.setBackgroundColor(sf::Color::Black);
     m_winnerLabel.setBorderColor(sf::Color::White);
     
     m_restartButton.setBackgroundSize(120, 40);
-    m_restartButton.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_restartButton.setPositionCenter(size.x * 0.5, size.y * 0.6);
     m_restartButton.setBorderThickness(1);
     m_restartButton.setTextColor(sf::Color::White);
     m_restartButton.setBackgroundColor(sf::Color::Black);
     m_restartButton.setBorderColor(sf::Color::White);
     
-    m_waitRestartLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.6);
+    m_waitRestartLabel.setPositionCenter(size.x * 0.5, size.y * 0.6);
     m_waitRestartLabel.setTextColor(sf::Color::White);
     m_waitRestartLabel.setBackgroundColor(sf::Color::Black);
     
     m_turnSelectLabel.setBackgroundSize(300, 175);
-    m_turnSelectLabel.setPositionCenter(windowSize.x * 0.5, windowSize.y * 0.5);
+    m_turnSelectLabel.setPositionCenter(size.x * 0.5, size.y * 0.5);
     m_turnSelectLabel.setBorderThickness(3);
     m_turnSelectLabel.setTextColor(sf::Color::White);
     m_turnSelectLabel.setBackgroundColor(sf::Color::Black);
     m_turnSelectLabel.setBorderColor(sf::Color::White);
     
     m_selectFirstButton.setBackgroundSize(110, 40);
-    m_selectFirstButton.setPositionCenter(windowSize.x * 0.38, windowSize.y * 0.6);
+    m_selectFirstButton.setPositionCenter(size.x * 0.38, size.y * 0.6);
     m_selectFirstButton.setBorderThickness(1);
     m_selectFirstButton.setTextColor(sf::Color::White);
     m_selectFirstButton.setBackgroundColor(sf::Color::Black);
     m_selectFirstButton.setBorderColor(sf::Color::White);
     
     m_selectSecondButton.setBackgroundSize(110, 40);
-    m_selectSecondButton.setPositionCenter(windowSize.x * 0.62, windowSize.y * 0.6);
+    m_selectSecondButton.setPositionCenter(size.x * 0.62, size.y * 0.6);
     m_selectSecondButton.setBorderThickness(1);
     m_selectSecondButton.setTextColor(sf::Color::White);
     m_selectSecondButton.setBackgroundColor(sf::Color::Black);
@@ -150,20 +148,20 @@ void GameScene::exit()
     m_selector.clear();
 }
 
-void GameScene::draw() const
+void GameScene::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    m_window.draw(m_tttDrawer);
+    target.draw(m_tttDrawer, states);
     
     switch(m_state)
     {
     case State::TURN_SELECT:
     {
-        m_window.draw(m_turnSelectLabel);
+        target.draw(m_turnSelectLabel);
         
         if(g_isHost)
         {
-            m_window.draw(m_selectFirstButton);
-            m_window.draw(m_selectSecondButton);
+            target.draw(m_selectFirstButton, states);
+            target.draw(m_selectSecondButton, states);
         }
         
         break;
@@ -176,12 +174,12 @@ void GameScene::draw() const
     
     case State::GAMEOVER:
     {
-        m_window.draw(m_winnerLabel);
+        target.draw(m_winnerLabel, states);
         
         if(m_wantRestart)
-            m_window.draw(m_waitRestartLabel);
+            target.draw(m_waitRestartLabel, states);
         else
-            m_window.draw(m_restartButton);
+            target.draw(m_restartButton, states);
         
         break;
     }

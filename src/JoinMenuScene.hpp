@@ -8,13 +8,13 @@
 class JoinMenuScene : public Scene
 {
 public:
-    JoinMenuScene(sf::RenderWindow&);
+    JoinMenuScene(const sf::Vector2u& size);
     
     void enter() override;
     void update(const Input&) override;
     void exit() override;
     
-    void draw() const override;
+    void draw(sf::RenderTarget&, sf::RenderStates) const override;
     
 private:
     TextLabel m_label;

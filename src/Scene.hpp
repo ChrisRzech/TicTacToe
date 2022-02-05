@@ -1,19 +1,17 @@
 #pragma once
 #include "Input.hpp"
-#include <sfml/Graphics/RenderWindow.hpp>
+#include <sfml/Graphics/Drawable.hpp>
 
-class Scene
+class Scene : public sf::Drawable
 {
 public:
-    Scene(sf::RenderWindow&);
+    Scene(const sf::Vector2u& size);
     virtual ~Scene() = default;
     
     virtual void enter() = 0;
     virtual void update(const Input&) = 0;
     virtual void exit() = 0;
     
-    virtual void draw() const = 0;
-
 protected:
-    sf::RenderWindow& m_window;
+    sf::Vector2u m_size;
 };

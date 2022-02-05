@@ -7,6 +7,7 @@
 #include "Resources.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Window/Event.hpp>
+#include <sfml/Graphics/RenderWindow.hpp>
 
 unsigned short g_port = 25'565;
 sf::TcpSocket g_socket;
@@ -49,10 +50,10 @@ int main()
     };
     Input input(window, 10, polledInputs);
     
-    SceneManager::addScene("MainMenu", new MainMenuScene(window));
-    SceneManager::addScene("HostMenu", new HostMenuScene(window));
-    SceneManager::addScene("JoinMenu", new JoinMenuScene(window));
-    SceneManager::addScene("Game", new GameScene(window));
+    SceneManager::addScene("MainMenu", new MainMenuScene(window.getSize()));
+    SceneManager::addScene("HostMenu", new HostMenuScene(window.getSize()));
+    SceneManager::addScene("JoinMenu", new JoinMenuScene(window.getSize()));
+    SceneManager::addScene("Game", new GameScene(window.getSize()));
     
     SceneManager::changeScene("MainMenu");
     
@@ -82,7 +83,7 @@ int main()
         SceneManager::getScene()->update(input);
         
         window.clear();
-        SceneManager::getScene()->draw();
+        window.draw(*SceneManager::getScene());
         window.display();
     }
 }

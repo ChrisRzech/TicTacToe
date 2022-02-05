@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 
-Scene::Scene(sf::RenderWindow& window)
-    : m_window{window}
+Scene::Scene(const sf::Vector2u& size)
+    : m_size{size}
 {
     
 }
