@@ -9,7 +9,7 @@ public:
     
     static void addScene(const std::string& name, Scene*);
     static void changeScene(const std::string& name);
-    static Scene* getScene();
+    static Scene& getScene();
 
 private:
     SceneManager();

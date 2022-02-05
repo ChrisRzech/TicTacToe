@@ -30,12 +30,12 @@ void SceneManager::changeScene(const std::string& name)
     instance->m_currentScene->enter();
 }
 
-Scene* SceneManager::getScene()
+Scene& SceneManager::getScene()
 {
     if(instance == nullptr)
         instance = new SceneManager;
     
-    return instance->m_currentScene;
+    return *instance->m_currentScene;
 }
 
 SceneManager::SceneManager()

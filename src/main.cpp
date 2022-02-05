@@ -80,10 +80,10 @@ int main()
         if(window.hasFocus())
             input.poll();
         
-        SceneManager::getScene()->update(input);
+        SceneManager::getScene().update(input);
         
         window.clear();
-        window.draw(*SceneManager::getScene());
+        window.draw(SceneManager::getScene());
         window.display();
     }
 }
