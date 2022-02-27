@@ -24,7 +24,7 @@ SFML_FLAGS = -I$(SFML_INC_DIR) -L$(SFML_LIB_DIR) $(SFML_LIBS:%=-l%)
 
 # Compiler
 CXX = g++
-CXXFLAGS = -W -std=c++17
+CXXFLAGS = -Wpedantic -Wall -Wextra -Werror -std=c++17
 
 #####################
 # Do not edit below #

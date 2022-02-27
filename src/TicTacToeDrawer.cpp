@@ -10,7 +10,7 @@ TicTacToeDrawer::TicTacToeDrawer(const TicTacToe& TicTacToe)
 }
 
 TicTacToeDrawer::TicTacToeDrawer(const TicTacToe& TicTacToe, sf::Vector2f position, sf::Vector2u size)
-    : m_TicTacToe{TicTacToe}, position{position}, size{size}
+    : position{position}, size{size}, m_TicTacToe{TicTacToe}
 {
     //Do nothing
 }
@@ -48,7 +48,7 @@ void TicTacToeDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) co
         lines.append(sf::Vertex{sf::Vector2f{position.x + size.x, startingY + spacingY * i}, color});
     }
     
-    target.draw(lines);
+    target.draw(lines, states);
     
     /* Draw symbols */
     sf::Text text;
@@ -73,7 +73,7 @@ void TicTacToeDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) co
                 float offsetY = spacingY / 2 - textHeight / 2;
                 text.setPosition(spacingX * col + offsetX - leftExtraSpace, spacingY * row + offsetY - topExtraSpace);
                 
-                target.draw(text);
+                target.draw(text, states);
             }
         }
     }

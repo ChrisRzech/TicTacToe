@@ -33,6 +33,11 @@ void TicTacToe::setMark(int row, int col)
             m_turn = Mark::X;
             break;
         }
+        
+        case Mark::EMPTY:
+        {
+            break;
+        }
         }
     }
 }
