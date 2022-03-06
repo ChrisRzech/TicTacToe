@@ -1,5 +1,6 @@
 #include "GameScene.hpp"
 #include "Resources.hpp"
+#include "SceneManager.hpp"
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Network/Packet.hpp>
 
@@ -14,7 +15,9 @@ GameScene::GameScene(const sf::Vector2u& size)
       m_waitRestartLabel{Resources::get().font, "Waiting for opponent..."},
       m_turnSelectLabel{Resources::get().font, ""},
       m_selectFirstButton{Resources::get().font, "First"},
-      m_selectSecondButton{Resources::get().font, "Second"}
+      m_selectSecondButton{Resources::get().font, "Second"},
+      m_opponentDisconnectedLabel{Resources::get().font, "Opponent disconnected"},
+      m_opponentDisconnectedButton{Resources::get().font, "Back"}
 {
     m_winnerLabel.setBackgroundSize(300, 175);
     m_winnerLabel.setPositionCenter(size.x * 0.5, size.y * 0.5);
@@ -54,6 +57,20 @@ GameScene::GameScene(const sf::Vector2u& size)
     m_selectSecondButton.setTextColor(sf::Color::White);
     m_selectSecondButton.setBackgroundColor(sf::Color::Black);
     m_selectSecondButton.setBorderColor(sf::Color::White);
+    
+    m_opponentDisconnectedLabel.setBackgroundSize(350, 175);
+    m_opponentDisconnectedLabel.setPositionCenter(size.x * 0.5, size.y * 0.5);
+    m_opponentDisconnectedLabel.setBorderThickness(3);
+    m_opponentDisconnectedLabel.setTextColor(sf::Color::White);
+    m_opponentDisconnectedLabel.setBackgroundColor(sf::Color::Black);
+    m_opponentDisconnectedLabel.setBorderColor(sf::Color::White);
+    
+    m_opponentDisconnectedButton.setBackgroundSize(110  , 40);
+    m_opponentDisconnectedButton.setPositionCenter(size.x * 0.5, size.y * 0.6);
+    m_opponentDisconnectedButton.setBorderThickness(1);
+    m_opponentDisconnectedButton.setTextColor(sf::Color::White);
+    m_opponentDisconnectedButton.setBackgroundColor(sf::Color::Black);
+    m_opponentDisconnectedButton.setBorderColor(sf::Color::White);
 }
 
 void GameScene::enter()
@@ -140,6 +157,14 @@ void GameScene::update(const Input& input)
         
         break;
     }
+    
+    case State::DISCONNECTED:
+    {
+        if(m_opponentDisconnectedButton.isPressed(input))
+            SceneManager::changeScene("MainMenu");
+        
+        break;
+    }
     }
 }
 
@@ -181,6 +206,13 @@ void GameScene::draw(sf::RenderTarget& target, sf::RenderStates states) const
         else
             target.draw(m_restartButton, states);
         
+        break;
+    }
+    
+    case State::DISCONNECTED:
+    {
+        target.draw(m_opponentDisconnectedLabel, states);
+        target.draw(m_opponentDisconnectedButton, states);
         break;
     }
     }
@@ -262,12 +294,28 @@ std::optional<std::pair<int, int>> GameScene::receiveMove()
     {
         sf::Packet packet;
         sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
+        switch(status)
+        {
+        case sf::Socket::Status::Done:
         {
             sf::Int8 receivedFirst;
             sf::Int8 receivedSecond;
             packet >> receivedFirst >> receivedSecond;
             move = std::make_pair(static_cast<int>(receivedFirst), static_cast<int>(receivedSecond));
+
+            break;
+        }
+        
+        case sf::Socket::Status::Disconnected:
+        {
+            m_state = State::DISCONNECTED;
+            break;
+        }
+        
+        default:
+        {
+            break;
+        }
         }
     }
     
@@ -289,8 +337,25 @@ bool GameScene::receiveRestart()
     {
         sf::Packet packet;
         sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
+        switch(status)
+        {
+        case sf::Socket::Status::Done:
+        {
             restart = true; //Don't care what is received, just wanted to know if they want to restart
+            break;
+        }
+        
+        case sf::Socket::Status::Disconnected:
+        {
+            m_state = State::DISCONNECTED;
+            break;
+        }
+        
+        default:
+        {
+            break;
+        }
+        }
     }
     
     return restart;
@@ -311,11 +376,27 @@ std::optional<TicTacToe::Mark> GameScene::receiveStartTurn()
     {
         sf::Packet packet;
         sf::Socket::Status status = g_socket.receive(packet);
-        if(status == sf::Socket::Status::Done)
+        switch(status)
+        {
+        case sf::Socket::Status::Done:
         {
             sf::Int8 receivedMark;
             packet >> receivedMark;
             mark = static_cast<TicTacToe::Mark>(receivedMark);
+            
+            break;
+        }
+        
+        case sf::Socket::Status::Disconnected:
+        {
+            m_state = State::DISCONNECTED;
+            break;
+        }
+        
+        default:
+        {
+            break;
+        }
         }
     }
     

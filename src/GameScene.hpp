@@ -17,7 +17,7 @@ public:
     void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 private:
-    enum class State { TURN_SELECT, PLAY, GAMEOVER };
+    enum class State { TURN_SELECT, PLAY, GAMEOVER, DISCONNECTED };
     State m_state;
     
     void restart();
@@ -46,4 +46,7 @@ private:
     TextLabel m_turnSelectLabel;
     Button m_selectFirstButton;
     Button m_selectSecondButton;
+    
+    TextLabel m_opponentDisconnectedLabel;
+    Button m_opponentDisconnectedButton;
 };
