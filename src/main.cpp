@@ -22,10 +22,10 @@ int main()
     
     Input input(window, 10);
     
-    SceneManager::addScene("MainMenu", new MainMenuScene(window.getSize()));
-    SceneManager::addScene("HostMenu", new HostMenuScene(window.getSize()));
-    SceneManager::addScene("JoinMenu", new JoinMenuScene(window.getSize()));
-    SceneManager::addScene("Game", new GameScene(window.getSize()));
+    SceneManager::addScene<MainMenuScene>("MainMenu", window.getSize());
+    SceneManager::addScene<HostMenuScene>("HostMenu", window.getSize());
+    SceneManager::addScene<JoinMenuScene>("JoinMenu", window.getSize());
+    SceneManager::addScene<GameScene>("Game", window.getSize());
     
     SceneManager::changeScene("MainMenu");
     

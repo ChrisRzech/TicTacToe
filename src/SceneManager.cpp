@@ -4,18 +4,8 @@ SceneManager* SceneManager::instance;
 
 SceneManager::~SceneManager()
 {
-    for(std::pair<std::string, Scene*> pair : m_scenes)
-    {
+    for(const std::pair<const std::string, Scene*>& pair : m_scenes)
         delete pair.second;
-    }
-}
-
-void SceneManager::addScene(const std::string& name, Scene* scene)
-{
-    if(instance == nullptr)
-        instance = new SceneManager;
-    
-    instance->m_scenes.insert(std::make_pair(name, scene));
 }
 
 void SceneManager::changeScene(const std::string& name)
