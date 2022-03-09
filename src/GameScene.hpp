@@ -23,6 +23,11 @@ private:
     void restart();
     void handleWinner(TicTacToe::WinCondition winner);
     
+    template<typename... DataType>
+    void sendData(const DataType&...);
+    template<typename... DataType>
+    std::optional<std::tuple<DataType...>> receiveData();
+    
     void sendMove(const std::pair<int, int>& move);
     std::optional<std::pair<int, int>> receiveMove();
     

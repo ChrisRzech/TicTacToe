@@ -279,126 +279,95 @@ void GameScene::handleWinner(TicTacToe::WinCondition winner)
     m_state = State::GAMEOVER;
 }
 
-void GameScene::sendMove(const std::pair<int, int>& move)
+//TODO: could be a templated lambda in C++20, maybe?
+template<typename DataType, typename... DataTypes>
+void sendData_helper(sf::Packet& packet, const DataType& data, const DataTypes&... datas)
+{
+    packet << data;
+    ((packet << datas), ...);
+}
+
+template<typename... DataTypes>
+void GameScene::sendData(const DataTypes&... datas)
 {
     sf::Packet packet;
-    packet << static_cast<sf::Int8>(move.first) << static_cast<sf::Int8>(move.second);
+    sendData_helper(packet, datas...);
     g_socket.send(packet);
+}
+
+template<typename... DataType>
+std::optional<std::tuple<DataType...>> GameScene::receiveData()
+{
+    std::optional<std::tuple<DataType...>> data;
+    
+    if(m_selector.wait(sf::milliseconds(10)))
+    {
+        sf::Packet packet;
+        sf::Socket::Status status = g_socket.receive(packet);
+        switch(status)
+        {
+        case sf::Socket::Status::Done:
+        {
+            //NOTE: std::apply() folds the parameter packs for us specifically for tuples
+            std::tuple<DataType...> receivedData;
+            std::apply
+            (
+                [&packet]
+                (DataType&... datas)
+                {
+                    ((packet >> datas), ...);
+                }, receivedData
+            );
+            data = receivedData;
+
+            break;
+        }
+        
+        case sf::Socket::Status::Disconnected:
+        {
+            m_state = State::DISCONNECTED;
+            break;
+        }
+        
+        default:
+        {
+            break;
+        }
+        }
+    }
+    
+    return data;
+}
+
+void GameScene::sendMove(const std::pair<int, int>& move)
+{
+    sendData(static_cast<sf::Int8>(move.first), static_cast<sf::Int8>(move.second));
 }
 
 std::optional<std::pair<int, int>> GameScene::receiveMove()
 {
-    std::optional<std::pair<int, int>> move;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        switch(status)
-        {
-        case sf::Socket::Status::Done:
-        {
-            sf::Int8 receivedFirst;
-            sf::Int8 receivedSecond;
-            packet >> receivedFirst >> receivedSecond;
-            move = std::make_pair(static_cast<int>(receivedFirst), static_cast<int>(receivedSecond));
-
-            break;
-        }
-        
-        case sf::Socket::Status::Disconnected:
-        {
-            m_state = State::DISCONNECTED;
-            break;
-        }
-        
-        default:
-        {
-            break;
-        }
-        }
-    }
-    
-    return move;
+    auto data = receiveData<sf::Int8, sf::Int8>();
+    return (data.has_value() ? std::make_optional(std::make_pair(std::get<0>(data.value()), std::get<1>(data.value()))) : std::nullopt);
 }
 
 void GameScene::sendRestart()
 {
-    sf::Packet packet;
-    packet << static_cast<sf::Int8>(0); //Don't care what is sent, just let them know to restart
-    g_socket.send(packet);
+    sendData(static_cast<sf::Int8>(0)); //Don't care what is sent, just let them know that we want to restart
 }
 
 bool GameScene::receiveRestart()
 {
-    bool restart = false;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        switch(status)
-        {
-        case sf::Socket::Status::Done:
-        {
-            restart = true; //Don't care what is received, just wanted to know if they want to restart
-            break;
-        }
-        
-        case sf::Socket::Status::Disconnected:
-        {
-            m_state = State::DISCONNECTED;
-            break;
-        }
-        
-        default:
-        {
-            break;
-        }
-        }
-    }
-    
-    return restart;
+    auto data = receiveData<sf::Int8>();
+    return data.has_value();
 }
 
 void GameScene::sendStartTurn(TicTacToe::Mark mark)
 {
-    sf::Packet packet;
-    packet << static_cast<sf::Int8>(mark);
-    g_socket.send(packet);
+    sendData(static_cast<sf::Int8>(mark));
 }
 
 std::optional<TicTacToe::Mark> GameScene::receiveStartTurn()
 {
-    std::optional<TicTacToe::Mark> mark;
-    
-    if(m_selector.wait(sf::milliseconds(10)))
-    {
-        sf::Packet packet;
-        sf::Socket::Status status = g_socket.receive(packet);
-        switch(status)
-        {
-        case sf::Socket::Status::Done:
-        {
-            sf::Int8 receivedMark;
-            packet >> receivedMark;
-            mark = static_cast<TicTacToe::Mark>(receivedMark);
-            
-            break;
-        }
-        
-        case sf::Socket::Status::Disconnected:
-        {
-            m_state = State::DISCONNECTED;
-            break;
-        }
-        
-        default:
-        {
-            break;
-        }
-        }
-    }
-    
-    return mark;
+    auto data = receiveData<sf::Int8>();
+    return (data.has_value() ? std::make_optional(static_cast<TicTacToe::Mark>(std::get<0>(data.value()))) : std::nullopt);
 }
