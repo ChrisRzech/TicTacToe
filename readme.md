@@ -1,7 +1,9 @@
 # Tic-Tac-Toe
 A multiplayer Tic-Tac-Toe game using [SFML](https://www.sfml-dev.org/). Host or join a game with your friends.
 
-# Install
+![Game result](.github/win_lose.png)
+
+## Building
 1. Download the latest version of [SFML](https://www.sfml-dev.org/download.php). Make sure to download the right SFML version for your system.
 2. Clone this repo
 ```
